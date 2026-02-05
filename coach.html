@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Interview Coach - EASY Easy Job</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<style type="text/tailwindcss">
+  body { font-family: 'Inter', sans-serif; background: #f3f4f6; height: 100vh; display: flex; flex-direction: column; }
+  
+  /* Chat Bubbles */
+  .bubble { @apply max-w-[85%] px-5 py-4 rounded-3xl leading-relaxed break-words shadow-sm; }
+  .ai { @apply bg-white text-gray-800 rounded-bl-none self-start border border-gray-100; }
+  .user { @apply bg-black text-white rounded-br-none self-end; }
+  
+  /* Markdown Styles */
+  .ai ul, .ai ol { @apply ml-5 list-disc my-2; }
+  .ai p { @apply mb-2 last:mb-0; }
+  .ai strong { @apply font-bold text-black; }
+
+  /* Layout */
+  .main-container { @apply flex-1 flex overflow-hidden max-w-7xl mx-auto w-full p-4 gap-4; }
+  .sidebar { @apply w-80 bg-white rounded-3xl p-6 shadow-xl flex flex-col hidden md:flex; }
+  .chat-area { @apply flex-1 bg-white rounded-3xl shadow-xl flex flex-col overflow-hidden relative; }
+
+  /* Typing Indicator */
+  .typing span { @apply inline-block w-2 h-2 bg-gray-400 rounded-full mx-0.5 animate-bounce; }
+  .typing span:nth-child(2) { animation-delay: 0.1s; }
+  .typing span:nth-child(3) { animation-delay: 0.2s; }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="bg-cyan-500 text-white py-4 shadow-lg shrink-0">
+  <div class="container mx-auto px-6 flex items-center justify-between">
+    <a href="index.html" class="text-2xl font-bold">EASY<span class="text-white"> Coach</span></a>
+    <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
+      <a href="index.html" class="hover:text-white">Home</a>
+      <a href="quiz.html" class="hover:text-white">Job Quiz</a>
+      <a href="job-search.html" class="hover:text-white">Job Search</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<div class="main-container">
+  
+  <!-- Sidebar: Controls -->
+  <aside class="sidebar">
+    <div class="mb-8">
+        <h2 class="text-xl font-black mb-4">Mock Interview Setup</h2>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Target Role</label>
+                <select id="role-select" class="w-full bg-gray-50 border-2 border-gray-200 rounded-xl px-3 py-2 font-bold focus:border-black outline-none">
+                    <option value="General">General Interview</option>
+                    <option value="Software Engineer">Software Engineer</option>
+                    <option value="Marketing Manager">Marketing Manager</option>
+                    <option value="Sales Representative">Sales Representative</option>
+                    <option value="Customer Service">Customer Service</option>
+                    <option value="HR Manager">HR Manager</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Difficulty</label>
+                <div class="flex bg-gray-50 p-1 rounded-xl">
+                    <button class="flex-1 py-1 rounded-lg text-sm font-bold bg-white shadow-sm">Normal</button>
+                    <button class="flex-1 py-1 rounded-lg text-sm font-bold text-gray-400 hover:text-black">Hard</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button onclick="startMockInterview()" class="w-full bg-cyan-500 text-white text-lg font-bold py-4 rounded-2xl hover:bg-cyan-600 transition-transform hover:scale-[1.02] shadow-lg mb-4 flex items-center justify-center gap-2">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        Start Interview
+    </button>
+
+    <div class="mt-auto pt-6 border-t border-gray-100">
+        <h3 class="text-xs font-bold text-gray-400 mb-2 uppercase">Quick Actions</h3>
+        <div class="flex flex-wrap gap-2">
+            <button onclick="quickAsk('Give me feedback on my last answer')" class="text-xs bg-gray-100 hover:bg-black hover:text-white px-3 py-2 rounded-lg font-bold transition">⭐ Get Feedback</button>
+            <button onclick="quickAsk('Can you rephrase that?')" class="text-xs bg-gray-100 hover:bg-black hover:text-white px-3 py-2 rounded-lg font-bold transition">🔄 Rephrase</button>
+            <button onclick="clearHistory()" class="text-xs text-red-500 hover:bg-red-50 px-3 py-2 rounded-lg font-bold transition">🗑️ Clear Chat</button>
+        </div>
+    </div>
+  </aside>
+
+  <!-- Chat Area -->
+  <main class="chat-area">
+    <!-- Header -->
+    <div class="p-4 border-b border-gray-100 flex items-center justify-between bg-white z-10">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white font-bold">AI</div>
+            <div>
+                <h1 class="font-bold text-gray-900">Coach Sarah</h1>
+                <p id="status-text" class="text-xs text-green-500 font-bold flex items-center gap-1">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Online
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    <div id="messages" class="flex-1 overflow-y-auto p-6 space-y-6 bg-gray-50">
+        <!-- Welcome Message -->
+        <div class="bubble ai">
+            Hi! I'm Sarah, your AI interview coach. <br>
+            Select a role on the left and click <strong>Start Interview</strong> to begin a realistic mock session, or just ask me anything!
+        </div>
+    </div>
+
+    <!-- Input -->
+    <div class="p-4 bg-white border-t border-gray-100">
+        <div class="flex items-center gap-2 bg-gray-100 rounded-2xl p-2 pr-4 border-2 border-transparent focus-within:border-black focus-within:bg-white transition-colors">
+            <button id="voiceBtn" class="p-3 text-gray-500 hover:text-black hover:bg-gray-200 rounded-xl transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+            </button>
+            <input type="text" id="userInput" placeholder="Type your answer..." class="flex-1 bg-transparent outline-none text-lg" autocomplete="off">
+            <button onclick="sendMessage()" class="bg-black text-white p-3 rounded-xl hover:bg-gray-800 transition shadow-md">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+            </button>
+        </div>
+    </div>
+  </main>
+</div>
+
+<script>
+const messages = document.getElementById('messages');
+const userInput = document.getElementById('userInput');
+const roleSelect = document.getElementById('role-select');
+let isInterviewMode = false;
+
+// Auto-scroll
+const scrollToBottom = () => messages.scrollTop = messages.scrollHeight;
+
+function addMessage(text, type) {
+    const div = document.createElement('div');
+    div.className = `bubble ${type} animate-fade-in-up`;
+    div.innerHTML = type === 'ai' ? marked.parse(text) : text;
+    messages.appendChild(div);
+    scrollToBottom();
+    return div;
+}
+
+function showTyping() {
+    const div = document.createElement('div');
+    div.id = 'typing-indicator';
+    div.className = 'bubble ai typing';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    messages.appendChild(div);
+    scrollToBottom();
+}
+
+function removeTyping() {
+    const el = document.getElementById('typing-indicator');
+    if(el) el.remove();
+}
+
+// Start Mock Interview Logic
+async function startMockInterview() {
+    const role = roleSelect.value;
+    isInterviewMode = true;
+    
+    // Clear chat visually but keep context in backend if needed (or clear backend too)
+    messages.innerHTML = '';
+    document.getElementById('status-text').textContent = `Interviewing for ${role}...`;
+    
+    // Initial Prompt
+    const prompt = `Act as a professional interviewer for a ${role} position. 
+    Start the interview by introducing yourself briefly and asking the first question. 
+    Do not give feedback yet. Wait for my answer. 
+    Ask one question at a time.`;
+
+    await callAI(prompt, true); // true = isSystemInstruction
+}
+
+async function quickAsk(text) {
+    userInput.value = text;
+    sendMessage();
+}
+
+async function sendMessage() {
+    const text = userInput.value.trim();
+    if (!text) return;
+    
+    addMessage(text, 'user');
+    userInput.value = '';
+    
+    // Context aware prompt
+    let prompt = text;
+    if (isInterviewMode) {
+        // In interview mode, we just send the user's answer, AI knows context
+    }
+
+    await callAI(prompt);
+}
+
+async function callAI(text, isSystem = false) {
+    showTyping();
+    
+    const messagesPayload = [];
+    if (isSystem) {
+        messagesPayload.push({ role: "system", content: text });
+    } else {
+        messagesPayload.push({ role: "user", content: text });
+    }
+
+    try {
+        const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: "deepseek-chat",
+                messages: messagesPayload,
+                stream: true
+            })
+        });
+
+        if (!res.ok) throw new Error("API Request Failed");
+
+        removeTyping();
+        
+        const aiBubble = document.createElement('div');
+        aiBubble.className = 'bubble ai animate-fade-in-up';
+        messages.appendChild(aiBubble);
+        scrollToBottom();
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let fullText = "";
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            
+            const chunk = decoder.decode(value);
+            const lines = chunk.split('\n');
+            
+            for (const line of lines) {
+                if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+                    try {
+                        const json = JSON.parse(line.substring(6));
+                        const content = json.choices[0]?.delta?.content || "";
+                        fullText += content;
+                        aiBubble.innerHTML = marked.parse(fullText);
+                        scrollToBottom();
+                    } catch (e) { }
+                }
+            }
+        }
+        
+        if (fullText) speak(fullText);
+
+    } catch (e) {
+        removeTyping();
+        addMessage("Error: " + e.message, 'ai');
+    }
+}
+
+// Text to Speech
+function speak(text) {
+    // Strip markdown for speech
+    const cleanText = text.replace(/[*#_]/g, '');
+    const utter = new SpeechSynthesisUtterance(cleanText);
+    utter.lang = 'en-US'; // Interview usually in English
+    speechSynthesis.speak(utter);
+}
+
+// Enter key
+userInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendMessage();
+});
+
+// Clear History
+async function clearHistory() {
+    messages.innerHTML = '';
+    addMessage("Chat history cleared.", 'ai');
+    // Call backend clear API if exists
+    try { await fetch('/api/clear', { method: 'POST' }); } catch(e) {}
+}
+
+</script>
+</body>
+</html>

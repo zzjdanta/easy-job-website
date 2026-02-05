@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-HK" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Easy Job – Job Quiz & CV Builder</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .gradient-bg { background: linear-gradient(135deg, #e0f7fa 0%, #fff 100%); }
+    .card-shadow { box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-cyan-400 to-cyan-500 text-white py-6">
+    <div class="container mx-auto px-4 text-center">
+      <h1 class="text-3xl md:text-4xl font-bold">Job Quiz!</h1>
+      <p class="mt-2 text-lg opacity-90">"Unlock Your Potential: Take the Quiz, Find Your Fit!"</p>
+      <button onclick="window.location.href='quiz.html'"
+              class="mt-5 px-8 py-3 bg-white text-cyan-600 rounded-full font-semibold hover:bg-cyan-50 transition">
+        Quiz now!
+      </button>
+    </div>
+  </header>
+
+  <!-- Visual Cards -->
+  <section class="container mx-auto px-4 py-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="bg-orange-100 rounded-xl p-6 flex items-center justify-center card-shadow">
+        <img src="3.png" alt="Chart" class="w-16 h-20 object-contain">
+      </div>
+      <div class="bg-purple-100 rounded-xl p-6 flex items-center justify-center card-shadow">
+        <img src="4.png" alt="Graph" class="w-16 h-20 object-contain">
+      </div>
+      <div class="bg-green-100 rounded-xl p-6 flex items-center justify-center card-shadow">
+        <img src="5.png" alt="Progress" class="w-16 h-20 object-contain">
+      </div>
+      <div class="bg-orange-50 rounded-xl p-6 flex items-center justify-center card-shadow">
+        <img src="6.png" alt="Analytics" class="w-16 h-20 object-contain">
+      </div>
+    </div>
+  </section>
+
+  <!-- Navigation Bar -->
+  <nav class="bg-cyan-500 text-white py-3 sticky top-0 z-10 shadow-md">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+      <a href="index.html" class="flex items-center font-bold text-xl">
+        <span class="text-2xl mr-1">EASY</span><span class="text-lg">Easy Job</span>
+      </a>
+      <div class="flex flex-wrap justify-center gap-4 text-sm md:text-base">
+        <a href="index.html" class="hover:underline">Home</a>
+        <a href="quiz.html" class="hover:underline">Job Quiz</a>
+        <a href="job-search.html" class="hover:underline">Job Search</a>
+        <a href="cv-template.html" class="hover:underline">CV Template</a>
+        <a href="coach.html" class="hover:underline">Interview Coach</a>
+         <a href="hr-post.html" class="hover:underline font-bold text-white">Post a Job</a>
+        <a href="login.html" class="hover:underline">Login</a>
+      </div>
+      <div class="w-full md:w-64">
+        <div class="relative">
+          <input type="text" placeholder="Search" class="w-full px-4 py-2 rounded-full text-gray-800 focus:outline-none">
+          <button class="absolute right-2 top-1/2 transform -translate-y-1/2 text-cyan-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CV Section -->
+  <section class="container mx-auto px-4 py-12 grid md:grid-cols-2 gap-8 items-center">
+    <div>
+      <h2 class="text-2xl md:text-3xl font-bold text-gray-800">CREATE YOUR OWN CV!</h2>
+      <p class="mt-4 text-gray-600 leading-relaxed">
+        Developing a compelling and authentic CV is a crucial step in showcasing your unique talents and aspirations to potential employers. 
+        Believe in the power of crafting a CV that truly reflects your personal journey and values!
+      </p>
+      <button onclick="window.location.href='cv-template.html'"
+              class="mt-6 px-6 py-3 bg-cyan-500 text-white rounded-full font-semibold hover:bg-cyan-600 transition">
+        Create Your Own CV!
+      </button>
+    </div>
+    <div class="flex justify-center">
+      <img src="1.png" alt="CV & Coffee" class="rounded-lg shadow-lg w-full max-w-md">
+    </div>
+  </section>
+
+  <!-- AI Interview Coach -->
+  <section class="bg-gradient-to-b from-gray-50 to-white py-16">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-2xl md:text-3xl font-bold text-gray-800">AI Interview Coach</h2>
+      <p class="mt-3 text-lg text-gray-600">"Elevate Your Interview Skills: Prepare, Impress, Succeed!"</p>
+      <button onclick="window.location.href='coach.html'"
+              class="mt-6 px-8 py-3 bg-cyan-500 text-white rounded-full font-semibold hover:bg-cyan-600 transition">
+        Call to action
+      </button>
+
+      <!-- Chat bubbles -->
+      <div class="mt-12 flex flex-col items-center space-y-6 md:space-y-0 md:flex-row md:justify-center md:space-x-12">
+        <div class="flex flex-col items-center max-w-xs">
+          <div class="bg-cyan-100 p-4 rounded-2xl shadow-md">
+            <div class="bg-white p-3 rounded-xl">
+              <p class="text-sm text-gray-700">Hello! Ready to practice?</p>
+            </div>
+          </div>
+          <img src="2.png" alt="AI" class="w-12 h-12 rounded-full -mt-6 border-4 border-white shadow">
+        </div>
+        <div class="flex flex-col items-center max-w-xs">
+          <img src="2.png" alt="User" class="w-12 h-12 rounded-full mb-2 border-4 border-white shadow">
+          <div class="bg-gray-200 p-4 rounded-2xl shadow-md">
+            <div class="bg-white p-3 rounded-xl">
+              <p class="text-sm text-gray-700">Yes, let's start!</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col items-center max-w-xs">
+          <div class="bg-cyan-100 p-4 rounded-2xl shadow-md">
+            <div class="bg-white p-3 rounded-xl">
+              <p class="text-sm text-gray-700">Great! First question…</p>
+            </div>
+          </div>
+          <img src="2.png" alt="AI" class="w-12 h-12 rounded-full -mt-6 border-4 border-white shadow">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-cyan-500 text-white py-6 mt-12">
+    <div class="container mx-auto px-4 text-center">
+      <p>© 2025 Easy Job. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

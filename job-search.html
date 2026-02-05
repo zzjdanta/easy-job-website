@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JOB Search - EASY Easy Job</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #fff; }
+    .search-input { @apply bg-white rounded-full px-8 py-5 text-lg shadow-lg border-4 border-white focus:outline-none; }
+    .search-btn { @apply bg-black text-white px-12 py-5 rounded-full font-bold hover:bg-gray-800; }
+    .card { @apply bg-white rounded-3xl shadow-xl border-4 border-black p-8 text-center; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- 导航栏 -->
+  <nav class="bg-cyan-500 text-white py-5 shadow-lg">
+    <div class="container mx-auto px-6 flex items-center justify-between">
+      <a href="index.html" class="text-3xl font-bold">EASY<span class="text-2xl"> Easy Job</span></a>
+      <div class="hidden md:flex items-center space-x-10 text-sm font-medium">
+        <a href="index.html" class="hover:underline">Home</a>
+        <a href="quiz.html" class="hover:underline">JOB Quiz</a>
+        <a href="job-search.html" class="underline font-bold">JOB Search</a>
+        <a href="cv-template.html" class="hover:underline">CV Template</a>
+        <a href="coach.html" class="hover:underline">Interview Coach</a>
+         <a href="hr-post.html" class="hover:underline font-bold text-white">Post a Job</a>
+        <a href="login.html" class="bg-black px-6 py-3 rounded-full">Login</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 搜索栏 -->
+  <div class="bg-cyan-500 py-12">
+    <div class="container mx-auto px-6 max-w-6xl">
+      <div class="flex flex-col md:flex-row items-center justify-center gap-6 text-white font-medium text-lg">
+        <span>Where</span>
+        <input type="text" id="search-location" placeholder="e.g. Central" class="search-input w-full md:w-80 text-black">
+        <span>Paying</span>
+        <input type="text" id="search-salary" placeholder="e.g. 20000" class="search-input w-full md:w-64 text-black">
+        <span>Type</span>
+        <input type="text" id="search-category" placeholder="e.g. IT" class="search-input w-full md:w-80 text-black">
+        <button id="search-btn" class="search-btn">Search</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主体内容 -->
+  <div class="container mx-auto px-6 py-16 max-w-7xl">
+
+    <!-- 第一行：Trending Jobs -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16 items-start">
+      <!-- 右边：Trending Jobs 大图（占8栏） -->
+      <div class="lg:col-span-8">
+        <h2 class="text-4xl font-black mb-8">Trending Jobs Hiring Now!</h2>
+        <div class="rounded-3xl overflow-hidden shadow-2xl">
+          <img src="search.png" alt="Trending Jobs" class="w-full">
+        </div>
+      </div>
+    </div>
+
+    <!-- 第二行：Recommended Jobs -->
+    <div class="text-center">
+      <h2 class="text-4xl font-black mb-12">Recommended Jobs</h2>
+      
+      <!-- 动态容器 -->
+      <div id="jobs-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
+        <p class="text-center col-span-full text-gray-500">Loading jobs...</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- JavaScript 逻辑 -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        loadJobs(); // 初始加载所有职位
+        
+        // 绑定搜索按钮点击事件
+        document.getElementById('search-btn').addEventListener('click', () => {
+            const loc = document.getElementById('search-location').value;
+            const sal = document.getElementById('search-salary').value;
+            const cat = document.getElementById('search-category').value;
+            loadJobs(loc, sal, cat);
+        });
+    });
+
+    async function loadJobs(location = '', salary = '', category = '') {
+        const container = document.getElementById('jobs-container');
+        container.innerHTML = '<p class="text-center col-span-full">Loading...</p>';
+        
+        try {
+            // 构建带参数的 URL
+            const params = new URLSearchParams();
+            if (location) params.append('location', location);
+            if (salary) params.append('salary', salary);
+            if (category) params.append('category', category);
+            
+            const response = await fetch(`/api/jobs?${params.toString()}`);
+            const jobs = await response.json();
+            
+            if (jobs.length === 0) {
+                container.innerHTML = '<p class="text-center col-span-full text-gray-500 text-xl">No jobs found matching your criteria.</p>';
+                return;
+            }
+
+            // 渲染卡片
+            container.innerHTML = jobs.map(job => `
+                <div class="card bg-white rounded-3xl shadow-xl border-4 border-black p-6 text-left hover:shadow-2xl transition-all h-full flex flex-col justify-between">
+                    <div>
+                        <!-- 顶部标签：类别和地点 -->
+                        <div class="flex justify-between items-center mb-4">
+                          <span class="bg-cyan-100 text-cyan-800 text-xs font-bold px-3 py-1 rounded-full uppercase">
+                            ${job.category || 'General'}
+                          </span>
+                          <span class="text-gray-400 text-xs flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            ${job.location || 'Hong Kong'}
+                          </span>
+                        </div>
+
+                        <h3 class="text-xl font-black text-gray-900 mb-1">${job.title}</h3>
+                        <p class="text-gray-600 font-medium text-sm mb-4">${job.company}</p>
+
+                        <div class="flex items-center gap-2 text-sm text-gray-700 font-bold mb-4">
+                          <span class="text-green-600">$</span>
+                          ${job.salary_range || 'Negotiable'}
+                        </div>
+
+                        <p class="text-gray-500 text-xs line-clamp-2 mb-6 h-8 overflow-hidden">
+                          ${job.requirements || ''}
+                        </p>
+                    </div>
+                    
+                    <!-- ✅ 修复点：添加了 || job.job_id 作为保险 -->
+                    <a href="job-detail.html?id=${job.id || job.job_id}" class="block w-full text-center bg-black text-white font-bold py-3 rounded-xl hover:bg-gray-800 transition-colors">
+                      View Details
+                    </a>
+                </div>
+            `).join('');
+            
+        } catch (error) {
+            console.error('Error:', error);
+            container.innerHTML = '<p class="text-center col-span-full text-red-500">Failed to load jobs.</p>';
+        }
+    }
+  </script>
+</body>
+</html>

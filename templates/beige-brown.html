@@ -1,0 +1,23 @@
+<div class="max-w-4xl mx-auto bg-amber-50 p-10 font-sans">
+  <div class="bg-amber-700 text-white rounded-tr-full p-12 relative">
+    <h1 class="text-5xl font-bold">{{firstName}} {{lastName}}</h1>
+    <p class="text-xl mt-2">Marketing Manager</p>
+    <div class="absolute top-8 right-8">
+      <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-40 h-40 rounded-full border-8 border-white">
+    </div>
+  </div>
+
+  <div class="grid grid-cols-3 gap-8 mt-8">
+    <div class="col-span-2">
+      <h2 class="text-2xl font-bold text-amber-800 border-b-2 border-amber-700 pb-2">EXPERIENCE</h2>
+      <!-- 经验会在这里手动写或用 JS 循环插入 -->
+      <p class="text-gray-700 mt-4">{{about}}</p>
+    </div>
+    <div>
+      <h2 class="text-xl font-bold text-amber-800">SKILLS</h2>
+      <p class="mt-3">{{skills}}</p>
+      <h2 class="text-xl font-bold text-amber-800 mt-8">LANGUAGE</h2>
+      <p class="mt-3">English • Arabic • French</p>
+    </div>
+  </div>
+</div>

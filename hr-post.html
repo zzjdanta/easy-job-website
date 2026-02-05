@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post a Job - EASY Easy Job</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #f8fafc; }
+    .input-field { @apply w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-black transition-colors; }
+    .label-text { @apply block text-sm font-bold text-gray-700 mb-1; }
+  </style>
+</head>
+<body class="min-h-screen pb-20">
+
+  <!-- 导航栏 -->
+  <nav class="bg-cyan-500 text-white py-5 shadow-lg">
+    <div class="container mx-auto px-6 flex items-center justify-between">
+      <a href="index.html" class="text-3xl font-bold">EASY<span class="text-2xl text-white"> HR</span></a>
+      <div class="hidden md:flex items-center space-x-10 text-sm font-medium">
+        <a href="index.html" class="hover:text-white">Back to Home</a>
+        <a href="job-search.html" class="hover:text-white">View All Jobs</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 主体内容 -->
+  <div class="container mx-auto px-6 py-12 max-w-3xl">
+    
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-black mb-4">Post a New Job</h1>
+      <p class="text-gray-500 text-lg">Reach thousands of job seekers in Hong Kong.</p>
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-xl border-4 border-gray-100 p-8 md:p-12">
+      <form id="post-job-form" class="space-y-6">
+        
+        <!-- Row 1 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="label-text">Job Title</label>
+            <input type="text" name="title" required placeholder="e.g. Senior Marketing Manager" class="input-field">
+          </div>
+          <div>
+            <label class="label-text">Company Name</label>
+            <input type="text" name="company" required placeholder="e.g. Global Tech Ltd." class="input-field">
+          </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="label-text">Salary Range</label>
+            <input type="text" name="salary" required placeholder="e.g. 25k - 35k" class="input-field">
+          </div>
+          <div>
+            <label class="label-text">Category</label>
+            <select name="category" class="input-field bg-white">
+              <option value="IT">Information Technology</option>
+              <option value="Marketing">Marketing & Media</option>
+              <option value="Admin">Admin & HR</option>
+              <option value="Sales">Sales & Business Dev</option>
+              <option value="Finance">Accounting & Finance</option>
+              <option value="Design">Design & Creative</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Service">Customer Service</option>
+              <option value="Education">Education</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Location -->
+        <div>
+            <label class="label-text">Location</label>
+            <select name="location" class="input-field bg-white">
+              <option value="Central">Central</option>
+              <option value="Causeway Bay">Causeway Bay</option>
+              <option value="Quarry Bay">Quarry Bay</option>
+              <option value="Tsim Sha Tsui">Tsim Sha Tsui</option>
+              <option value="Kwun Tong">Kwun Tong</option>
+              <option value="Kowloon Bay">Kowloon Bay</option>
+              <option value="Shatin">Shatin</option>
+              <option value="Cyberport">Cyberport</option>
+              <option value="Science Park">Science Park</option>
+              <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <!-- Requirements -->
+        <div>
+          <label class="label-text">Job Requirements & Description</label>
+          <textarea name="requirements" required rows="6" placeholder="List the key responsibilities and requirements..." class="input-field"></textarea>
+          <p class="text-xs text-gray-400 mt-2 text-right">Tip: Be specific to attract better candidates.</p>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-6">
+          <button type="submit" class="w-full bg-black text-white text-xl font-bold py-4 rounded-xl hover:bg-gray-800 transition-transform hover:scale-[1.02] shadow-lg">
+            Publish Job Now
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+
+  <script>
+    document.getElementById('post-job-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]');
+        const originalText = btn.textContent;
+        btn.textContent = 'Publishing...';
+        btn.disabled = true;
+
+        // Collect form data
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+            const res = await fetch('/api/jobs/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            const result = await res.json();
+
+            if (res.ok) {
+                alert('✅ Job Published Successfully!');
+                // Redirect to the new job page
+                window.location.href = `job-detail.html?id=${result.id}`;
+            } else {
+                alert('❌ Error: ' + (result.error || 'Unknown error'));
+            }
+        } catch (err) {
+            alert('❌ Network Error: ' + err.message);
+        } finally {
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JOB Quiz - AI Career Advisor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <!-- ✅ FIX: Added type="text/tailwindcss" -->
+  <style type="text/tailwindcss">
+    body { font-family: 'Inter', sans-serif; background: #fff; }
+    .option-btn { @apply w-full text-left bg-gray-50 border-2 border-gray-200 px-8 py-5 rounded-2xl text-lg font-bold hover:bg-black hover:text-white hover:border-black transition-all duration-300; }
+    .step { @apply hidden transition-opacity duration-500; }
+    .step.active { @apply block; }
+    .progress-bar { @apply h-2 bg-gray-100 rounded-full overflow-hidden; }
+    .progress-fill { @apply h-full bg-cyan-500 transition-all duration-500; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <nav class="bg-cyan-500 text-white py-5 shadow-lg">
+    <div class="container mx-auto px-6 flex items-center justify-between">
+      <a href="index.html" class="text-3xl font-bold">EASY<span class="text-2xl"> Easy Job</span></a>
+      <div class="hidden md:flex items-center space-x-10 text-sm font-medium">
+        <a href="index.html" class="hover:underline">Home</a>
+        <a href="quiz.html" class="underline font-bold">JOB Quiz</a>
+        <a href="job-search.html" class="hover:underline">JOB Search</a>
+        <a href="hr-post.html" class="hover:underline">Post a Job</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="flex-1 container mx-auto px-6 py-12 max-w-4xl">
+    
+    <!-- Progress -->
+    <div class="mb-12 max-w-xl mx-auto">
+        <div class="flex justify-between text-xs font-bold text-gray-400 mb-2 uppercase">
+            <span>Start</span>
+            <span>Analysis</span>
+            <span>Result</span>
+        </div>
+        <div class="progress-bar">
+            <div id="progress" class="progress-fill w-[10%]"></div>
+        </div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-16 items-start">
+      
+      <!-- Left: Questions -->
+      <div id="quiz-container" class="lg:col-span-1">
+        
+        <!-- Step 1 -->
+        <div id="step-1" class="step active">
+            <h2 class="text-sm font-bold text-cyan-500 mb-2 uppercase tracking-wider">Question 1 of 3</h2>
+            <h1 class="text-4xl font-black mb-10 leading-tight">What kind of work environment do you prefer?</h1>
+            <div class="space-y-4">
+                <button class="option-btn" onclick="nextStep(1, 'Independent & Quiet')">🏠 Independent & Quiet</button>
+                <button class="option-btn" onclick="nextStep(1, 'Team-oriented & Social')">👥 Team-oriented & Social</button>
+                <button class="option-btn" onclick="nextStep(1, 'Outdoor & Active')">🏃 Outdoor & Active</button>
+                <button class="option-btn" onclick="nextStep(1, 'Structured & Corporate')">🏢 Structured & Corporate</button>
+            </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div id="step-2" class="step">
+            <h2 class="text-sm font-bold text-cyan-500 mb-2 uppercase tracking-wider">Question 2 of 3</h2>
+            <h1 class="text-4xl font-black mb-10 leading-tight">What is your biggest strength?</h1>
+            <div class="space-y-4">
+                <button class="option-btn" onclick="nextStep(2, 'Logical Analysis')">🧠 Logical Analysis & Data</button>
+                <button class="option-btn" onclick="nextStep(2, 'Creative Design')">🎨 Creative Design</button>
+                <button class="option-btn" onclick="nextStep(2, 'Communication')">🗣️ Communication & Persuasion</button>
+                <button class="option-btn" onclick="nextStep(2, 'Helping Others')">🤝 Helping & Teaching Others</button>
+            </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div id="step-3" class="step">
+            <h2 class="text-sm font-bold text-cyan-500 mb-2 uppercase tracking-wider">Question 3 of 3</h2>
+            <h1 class="text-4xl font-black mb-10 leading-tight">Which field interests you the most?</h1>
+            <div class="space-y-4">
+                <button class="option-btn" onclick="nextStep(3, 'Technology & AI')">💻 Technology & AI</button>
+                <button class="option-btn" onclick="nextStep(3, 'Business & Money')">💰 Business & Finance</button>
+                <button class="option-btn" onclick="nextStep(3, 'Art & Culture')">🎭 Art & Culture</button>
+                <button class="option-btn" onclick="nextStep(3, 'Science & Engineering')">🔬 Science & Engineering</button>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div id="step-loading" class="step text-center py-20">
+            <div class="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-black mb-6"></div>
+            <h2 class="text-2xl font-bold">AI is analyzing your profile...</h2>
+            <p class="text-gray-500">Finding the perfect match for you.</p>
+        </div>
+
+      </div>
+
+      <!-- Right: Image (Static) -->
+      <div class="hidden lg:block">
+        <div class="relative sticky top-10">
+          <div class="bg-white rounded-3xl shadow-2xl overflow-hidden p-6 rotate-3 hover:rotate-0 transition-transform duration-500">
+            <img src="job.png" alt="Quiz" class="w-full rounded-xl">
+            <div class="mt-6">
+                <h3 class="font-bold text-xl mb-2">Did you know?</h3>
+                <p class="text-gray-500 text-sm">Choosing a career based on your personality type can increase job satisfaction by 70%.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Result Section (Full Width) -->
+    <div id="result-section" class="hidden mt-8 animate-fade-in-up">
+        <div class="bg-black text-white rounded-3xl p-10 md:p-16 text-center mb-16 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-purple-500"></div>
+            
+            <h2 class="text-cyan-400 font-bold tracking-widest uppercase mb-4">Your AI Career Match</h2>
+            <h1 id="res-category" class="text-5xl md:text-7xl font-black mb-8">Marketing</h1>
+            
+            <p id="res-comment" class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                "You are a creative soul who loves connecting with people. The dynamic world of marketing is your playground!"
+            </p>
+
+            <div class="mt-12 flex justify-center gap-4 flex-wrap">
+                <span id="role-tags" class="flex gap-3 justify-center flex-wrap">
+                    <!-- Tags will be injected here -->
+                </span>
+            </div>
+        </div>
+
+        <h3 class="text-3xl font-bold mb-8">Recommended Jobs for You</h3>
+        <div id="res-jobs" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Job Cards -->
+        </div>
+
+        <div class="text-center mt-16">
+            <button onclick="location.reload()" class="text-gray-500 hover:text-black font-bold underline">Retake Quiz</button>
+        </div>
+    </div>
+
+  </div>
+
+  <script>
+    const answers = [];
+    const totalSteps = 3;
+
+    function nextStep(currentStep, answer) {
+        answers.push(answer);
+        
+        // Hide current
+        document.getElementById(`step-${currentStep}`).classList.remove('active');
+        
+        if (currentStep < totalSteps) {
+            // Show next
+            const next = currentStep + 1;
+            document.getElementById(`step-${next}`).classList.add('active');
+            document.getElementById('progress').style.width = `${(next/totalSteps)*100}%`;
+        } else {
+            // Finish
+            submitQuiz();
+        }
+    }
+
+    async function submitQuiz() {
+        document.getElementById('step-loading').classList.add('active');
+        document.getElementById('progress').style.width = '100%';
+
+        try {
+            const res = await fetch('/api/quiz/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ answers })
+            });
+            
+            const data = await res.json();
+            showResult(data);
+
+        } catch (e) {
+            console.error(e);
+            alert('Analysis failed. Please check console.');
+            location.reload();
+        }
+    }
+
+    function showResult(data) {
+        document.getElementById('quiz-container').classList.add('hidden'); // Hide questions
+        document.querySelector('.lg\\:block').classList.add('hidden'); // Hide right image
+        document.getElementById('result-section').classList.remove('hidden');
+
+        const analysis = data.analysis;
+        document.getElementById('res-category').textContent = analysis.category;
+        document.getElementById('res-comment').textContent = `"${analysis.comment}"`;
+        
+        // Roles tags
+        const tagsContainer = document.getElementById('role-tags');
+        if (analysis.roles) {
+            tagsContainer.innerHTML = analysis.roles.map(role => 
+                `<span class="bg-gray-800 text-white px-4 py-2 rounded-full text-sm font-bold"># ${role}</span>`
+            ).join('');
+        }
+
+        // Recommended jobs
+        const jobsContainer = document.getElementById('res-jobs');
+        if (data.jobs && data.jobs.length > 0) {
+            jobsContainer.innerHTML = data.jobs.map(job => `
+                <a href="job-detail.html?id=${job.id || job.job_id}" class="block bg-white border-2 border-black rounded-2xl p-6 hover:shadow-xl transition-shadow">
+                    <div class="text-xs font-bold text-cyan-600 mb-2 uppercase">${job.location}</div>
+                    <h3 class="text-xl font-bold mb-1">${job.title}</h3>
+                    <p class="text-gray-500 text-sm mb-4">${job.company}</p>
+                    <div class="font-bold text-green-600">${job.salary_range}</div>
+                </a>
+            `).join('');
+        } else {
+            jobsContainer.innerHTML = '<p class="text-gray-500">No open positions in this category yet, but keep looking!</p>';
+        }
+    }
+  </script>
+</body>
+</html>

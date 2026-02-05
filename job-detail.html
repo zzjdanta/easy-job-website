@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Details - EASY Easy Job</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #f8fafc; }
+    .back-btn { @apply flex items-center gap-2 text-gray-600 font-bold hover:text-black transition-colors mb-8; }
+  </style>
+</head>
+<body class="min-h-screen pb-20">
+
+  <!-- 导航栏 -->
+  <nav class="bg-cyan-500 text-white py-5 shadow-lg">
+    <div class="container mx-auto px-6 flex items-center justify-between">
+      <a href="index.html" class="text-3xl font-bold">EASY<span class="text-2xl"> Easy Job</span></a>
+      <div class="hidden md:flex items-center space-x-10 text-sm font-medium">
+        <a href="index.html" class="hover:underline">Home</a>
+        <a href="job-search.html" class="underline font-bold">JOB Search</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 主体内容 -->
+  <div class="container mx-auto px-6 py-12 max-w-4xl">
+    
+    <a href="job-search.html" class="back-btn">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+      Back to Search
+    </a>
+
+    <div id="loading" class="text-center py-20 text-xl text-gray-500">Loading job details...</div>
+    <div id="error" class="hidden text-center py-20 text-xl text-red-500">Job not found.</div>
+
+    <!-- 职位详情卡片 -->
+    <div id="job-content" class="hidden bg-white rounded-3xl shadow-xl border-4 border-black overflow-hidden">
+      
+      <!-- 头部 Banner -->
+      <div class="bg-cyan-50 p-10 border-b-2 border-gray-100">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <span id="job-category" class="bg-cyan-100 text-cyan-800 text-xs font-bold px-3 py-1 rounded-full uppercase">Category</span>
+              <span id="job-location" class="text-gray-500 text-sm flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                <span id="job-location-text">Location</span>
+              </span>
+            </div>
+            <h1 id="job-title" class="text-4xl font-black text-gray-900 mb-2">Job Title</h1>
+            <h2 id="job-company" class="text-xl font-bold text-gray-600">Company Name</h2>
+          </div>
+          
+          <div class="bg-black text-white px-6 py-4 rounded-2xl text-center min-w-[150px]">
+            <div class="text-xs text-gray-400 uppercase font-bold mb-1">Salary</div>
+            <div id="job-salary" class="text-xl font-bold text-green-400">Negotiable</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 详情内容 -->
+      <div class="p-10">
+        <h3 class="text-2xl font-bold mb-6 flex items-center gap-2">
+          <svg class="w-6 h-6 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          Job Requirements
+        </h3>
+        <div id="job-requirements" class="text-gray-700 text-lg leading-relaxed whitespace-pre-line">
+          <!-- Requirements text will go here -->
+        </div>
+
+        <div class="mt-12 pt-10 border-t-2 border-gray-100 flex justify-center">
+          <button onclick="openModal()" class="bg-black text-white text-xl font-bold px-12 py-4 rounded-full hover:bg-gray-800 transition-transform hover:scale-105 shadow-lg">
+            Apply Now
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Application Modal -->
+  <div id="apply-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 px-4">
+    <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl transform transition-all scale-100">
+      <h2 class="text-2xl font-black mb-6">Apply for this Job</h2>
+      
+      <form id="apply-form" class="space-y-4">
+        <div>
+          <label class="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
+          <input type="text" id="app-name" required class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-black transition-colors">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-bold text-gray-700 mb-1">Email Address</label>
+          <input type="email" id="app-email" required class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-black transition-colors">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-bold text-gray-700 mb-1">Paste Your Resume / CV Content</label>
+          <textarea id="app-resume" required placeholder="Paste your full resume text here..." style="height: 150px;" class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-black transition-colors"></textarea>
+        </div>
+
+        <div class="pt-4 flex gap-3">
+          <button type="button" onclick="closeModal()" class="flex-1 bg-gray-100 text-gray-700 font-bold py-3 rounded-xl hover:bg-gray-200">Cancel</button>
+          <button type="submit" class="flex-1 bg-black text-white font-bold py-3 rounded-xl hover:bg-gray-800">Send Application</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // --- 页面逻辑 ---
+    document.addEventListener('DOMContentLoaded', async () => {
+      const params = new URLSearchParams(window.location.search);
+      const jobId = params.get('id');
+
+      if (!jobId) {
+        showError();
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/jobs/${jobId}`);
+        if (!response.ok) throw new Error('Job not found');
+        const job = await response.json();
+        renderJob(job);
+      } catch (e) {
+        console.error(e);
+        showError();
+      }
+    });
+
+    function renderJob(job) {
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('job-content').classList.remove('hidden');
+
+      document.getElementById('job-title').textContent = job.title;
+      document.getElementById('job-company').textContent = job.company;
+      document.getElementById('job-salary').textContent = job.salary_range || 'Negotiable';
+      document.getElementById('job-category').textContent = job.category || 'General';
+      
+      // ✅ 修复后的安全写法
+      document.getElementById('job-location-text').textContent = job.location || 'Hong Kong';
+      
+      document.getElementById('job-requirements').textContent = job.requirements || 'No specific requirements listed.';
+    }
+
+    function showError() {
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('error').classList.remove('hidden');
+    }
+
+    // --- 模态框逻辑 ---
+    const modal = document.getElementById('apply-modal');
+
+    function openModal() {
+        modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+        modal.classList.add('hidden');
+    }
+
+    // Close on click outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+    // --- 申请表单逻辑 ---
+    document.getElementById('apply-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]');
+        const originalText = btn.textContent;
+        btn.textContent = '🤖 AI Analyzing...';
+        btn.disabled = true;
+
+        const params = new URLSearchParams(window.location.search);
+        const jobId = params.get('id');
+
+        const data = {
+            job_id: jobId,
+            name: document.getElementById('app-name').value,
+            email: document.getElementById('app-email').value,
+            resume: document.getElementById('app-resume').value
+        };
+
+        try {
+            const res = await fetch('/api/apply', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            
+            const result = await res.json();
+
+            if (res.ok) {
+                closeModal();
+                
+                // Show AI Analysis Result
+                if (result.status === 'low_match') {
+                    showAiFeedback(result.analysis, result.recommendations);
+                } else {
+                    alert(`✅ Match Score: ${result.analysis.score}/100\n\nApplication Sent! ${result.analysis.advice}`);
+                    e.target.reset();
+                }
+            } else {
+                alert('❌ Error: ' + (result.error?.message || 'Unknown error'));
+            }
+        } catch (err) {
+            alert('❌ Network Error: ' + err.message);
+        } finally {
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }
+    });
+
+    function showAiFeedback(analysis, recs) {
+        const div = document.createElement('div');
+        div.className = 'fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[60] px-4';
+        
+        let recsHtml = '';
+        if (recs && recs.length > 0) {
+            recsHtml = '<h4 class="font-bold mt-4 mb-2">Recommended for you:</h4><div class="space-y-2">';
+            recs.forEach(job => {
+                recsHtml += `<a href="job-detail.html?id=${job.id}" class="block p-3 bg-gray-50 rounded-lg hover:bg-gray-100 border border-gray-200">
+                    <div class="font-bold text-black">${job.title}</div>
+                    <div class="text-sm text-gray-500">${job.company} - ${job.salary_range}</div>
+                </a>`;
+            });
+            recsHtml += '</div>';
+        }
+
+        div.innerHTML = `
+            <div class="bg-white rounded-3xl p-8 max-w-lg w-full shadow-2xl relative">
+                <button onclick="this.closest('.fixed').remove()" class="absolute top-4 right-4 text-gray-400 hover:text-black">✕</button>
+                
+                <div class="text-center mb-6">
+                    <div class="inline-block bg-yellow-100 text-yellow-800 text-2xl font-black px-4 py-2 rounded-full mb-2">
+                        Match Score: ${analysis.score}
+                    </div>
+                    <h3 class="text-xl font-bold">Not a perfect match yet</h3>
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-xl mb-6 text-sm text-gray-700">
+                    <p class="font-bold text-gray-900 mb-1">AI Analysis:</p>
+                    <p class="mb-2">${analysis.reason}</p>
+                    <p class="font-bold text-gray-900 mb-1">Advice:</p>
+                    <p>${analysis.advice}</p>
+                </div>
+
+                ${recsHtml}
+
+                <div class="mt-6 pt-6 border-t border-gray-100 text-center">
+                    <p class="text-gray-500 text-sm mb-3">Want to improve your chances?</p>
+                    <a href="coach.html" class="inline-block bg-black text-white font-bold px-8 py-3 rounded-full hover:bg-gray-800">
+                        Practice with Interview Coach
+                    </a>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(div);
+    }
+  </script>
+</body>
+</html>
