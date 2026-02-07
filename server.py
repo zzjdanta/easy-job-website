@@ -19,6 +19,19 @@ PORT = int(os.environ.get("PORT", 8000))
 def serve_index():
     return send_from_directory('.', 'index.html')
 
+@app.route('/api/jobs', methods=['GET'])
+def get_jobs():
+    try:
+        location = request.args.get('location')
+        salary = request.args.get('salary')
+        category = request.args.get('category')
+        
+        jobs = database.get_jobs(location=location, min_salary=salary, category=category)
+        return jsonify(jobs)
+    except Exception as e:
+        print(f"Error getting jobs: {e}")
+        return jsonify({"error": {"message": str(e)}}), 500
+
 @app.route('/<path:path>')
 def serve_static(path):
     return send_from_directory('.', path)
