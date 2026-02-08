@@ -59,6 +59,7 @@ def apply_job(job_id):
         return jsonify({"error": {"message": str(e)}}), 500
 
 @app.route('/api/hr/jobs', methods=['POST'])
+@app.route('/api/jobs/create', methods=['POST']) # Alias for frontend compatibility
 def post_job():
     try:
         data = request.json
@@ -74,6 +75,56 @@ def post_job():
             return jsonify({"status": "success", "id": new_id})
         return jsonify({"error": "Failed to create job"}), 500
     except Exception as e:
+        return jsonify({"error": {"message": str(e)}}), 500
+
+@app.route('/api/quiz/analyze', methods=['POST'])
+def analyze_quiz():
+    try:
+        data = request.json
+        answers = data.get('answers', [])
+        
+        # Simple heuristic analysis
+        category = "General"
+        roles = ["Office Assistant", "Customer Support"]
+        comment = "You are versatile and can adapt to various environments."
+        
+        # Check last answer (Interest)
+        if len(answers) >= 3:
+            interest = answers[2]
+            if "Technology" in interest:
+                category = "IT"
+                roles = ["Software Engineer", "Data Analyst", "Product Manager"]
+                comment = "You have a logical mind and a passion for innovation. The tech world needs your problem-solving skills!"
+            elif "Business" in interest:
+                category = "Finance"
+                roles = ["Financial Analyst", "Investment Banker", "Accountant"]
+                comment = "You are strategic and goal-oriented. The fast-paced world of finance and business suits you well."
+            elif "Art" in interest:
+                category = "Design"
+                roles = ["Graphic Designer", "UX/UI Designer", "Art Director"]
+                comment = "You see the world through a creative lens. Design and arts are where your talents will shine."
+            elif "Science" in interest:
+                category = "Engineering"
+                roles = ["Civil Engineer", "Lab Researcher", "Mechanical Engineer"]
+                comment = "Curiosity drives you. Science and engineering offer the complex challenges you crave."
+
+        # Fetch recommended jobs from DB
+        jobs = database.get_jobs(category=category, limit=3)
+        
+        # If no jobs found in that category, fetch random ones
+        if not jobs:
+            jobs = database.get_jobs(limit=3)
+
+        return jsonify({
+            "analysis": {
+                "category": category,
+                "comment": comment,
+                "roles": roles
+            },
+            "jobs": jobs
+        })
+    except Exception as e:
+        print(f"Quiz error: {e}")
         return jsonify({"error": {"message": str(e)}}), 500
 
 @app.route('/<path:path>')
