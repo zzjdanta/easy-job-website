@@ -32,6 +32,50 @@ def get_jobs():
         print(f"Error getting jobs: {e}")
         return jsonify({"error": {"message": str(e)}}), 500
 
+@app.route('/api/jobs/<int:job_id>', methods=['GET'])
+def get_job_detail(job_id):
+    try:
+        job = database.get_job_by_id(job_id)
+        if job:
+            return jsonify(job)
+        return jsonify({"error": "Job not found"}), 404
+    except Exception as e:
+        return jsonify({"error": {"message": str(e)}}), 500
+
+@app.route('/api/jobs/<int:job_id>/apply', methods=['POST'])
+def apply_job(job_id):
+    try:
+        data = request.json
+        success = database.apply_for_job(
+            job_id, 
+            data.get('name'), 
+            data.get('email'), 
+            data.get('message')
+        )
+        if success:
+            return jsonify({"status": "success"})
+        return jsonify({"error": "Failed to save application"}), 500
+    except Exception as e:
+        return jsonify({"error": {"message": str(e)}}), 500
+
+@app.route('/api/hr/jobs', methods=['POST'])
+def post_job():
+    try:
+        data = request.json
+        new_id = database.create_job(
+            data.get('title'),
+            data.get('company'),
+            data.get('salary'),
+            data.get('category'),
+            data.get('location'),
+            data.get('requirements')
+        )
+        if new_id:
+            return jsonify({"status": "success", "id": new_id})
+        return jsonify({"error": "Failed to create job"}), 500
+    except Exception as e:
+        return jsonify({"error": {"message": str(e)}}), 500
+
 @app.route('/<path:path>')
 def serve_static(path):
     return send_from_directory('.', path)
