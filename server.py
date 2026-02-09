@@ -58,6 +58,51 @@ def apply_job(job_id):
     except Exception as e:
         return jsonify({"error": {"message": str(e)}}), 500
 
+@app.route('/api/apply', methods=['POST'])
+def apply_job_smart():
+    try:
+        data = request.json
+        job_id = data.get('job_id')
+        resume = data.get('resume')
+        
+        # Save application
+        database.apply_for_job(
+            job_id, 
+            data.get('name'), 
+            data.get('email'), 
+            resume # Map resume to message
+        )
+        
+        # Mock AI Analysis Result (Demo Magic)
+        import random
+        score = random.randint(70, 95)
+        
+        if score > 80:
+            return jsonify({
+                "status": "success",
+                "analysis": {
+                    "score": score,
+                    "reason": "Your resume demonstrates strong relevance to this position, particularly in skills and experience.",
+                    "advice": "Be prepared to discuss your past projects in detail during the interview."
+                },
+                "recommendations": []
+            })
+        else:
+            # Low match simulation
+            return jsonify({
+                "status": "low_match",
+                "analysis": {
+                    "score": score,
+                    "reason": "Your experience seems slightly different from the core requirements of this role.",
+                    "advice": "Consider emphasizing your transferable skills or looking at junior roles."
+                },
+                "recommendations": database.get_jobs(limit=2) # Recommend other jobs
+            })
+
+    except Exception as e:
+        print(f"Apply error: {e}")
+        return jsonify({"error": {"message": str(e)}}), 500
+
 @app.route('/api/hr/jobs', methods=['POST'])
 @app.route('/api/jobs/create', methods=['POST']) # Alias for frontend compatibility
 def post_job():
