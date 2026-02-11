@@ -133,10 +133,16 @@
   </div>
 
   <script>
-    // Get report from URL parameter or localStorage
+    // Get report from localStorage (URL parameter removed due to length limits)
     function loadReport() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const reportText = urlParams.get('report') || localStorage.getItem('careerReport');
+      // Try to get from localStorage first (preferred method for large reports)
+      let reportText = localStorage.getItem('careerReport');
+      
+      // Fallback: Check URL params just in case (for backward compatibility)
+      if (!reportText) {
+        const urlParams = new URLSearchParams(window.location.search);
+        reportText = urlParams.get('report');
+      }
       
       if (!reportText) {
         document.getElementById('reportContent').innerHTML = 

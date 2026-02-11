@@ -913,7 +913,7 @@
           .join('');
         
         // Store report for report.html
-        localStorage.setItem('careerReport', careerReport);
+        localStorage.setItem('careerReport', formattedReport);
         
         // Show success message and open report in new window
         document.getElementById('resultContent').innerHTML = 
@@ -938,13 +938,9 @@
       }
     }
 
-    // Open report in new window
+    // Open report in new window (using localStorage instead of URL params)
     function openReport() {
-      const reportText = window.careerReportText || localStorage.getItem('careerReport');
-      if (reportText) {
-        const encodedReport = encodeURIComponent(reportText);
-        window.open(`report.html?report=${encodedReport}`, '_blank', 'width=800,height=1000');
-      }
+      window.open('report.html', '_blank', 'width=800,height=1000');
     }
 
     // Event listeners
