@@ -817,10 +817,10 @@
         // Debug: Log data being sent
         console.log('Sending quiz data:', quizData);
         console.log('Data count:', Object.keys(quizData).length);
-        console.log('Webhook URL:', 'https://alexis123.app.n8n.cloud/webhook/career-quiz-webhook');
+        console.log('Webhook URL:', 'https://alexislung10.app.n8n.cloud/webhook/career-quiz-webhook');
         
-        // Direct request to n8n (Requires CORS plugin or n8n CORS enabled)
-        const n8nUrl = 'https://alexis123.app.n8n.cloud/webhook/career-quiz-webhook';
+        // Direct request to n8n Production URL (Requires workflow to be Active/Published)
+        const n8nUrl = 'https://alexislung10.app.n8n.cloud/webhook/career-quiz-webhook';
         console.log('Sending request directly to:', n8nUrl);
 
         const response = await fetch(n8nUrl, {
