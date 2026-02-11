@@ -122,52 +122,30 @@ def post_job():
     except Exception as e:
         return jsonify({"error": {"message": str(e)}}), 500
 
+import requests # Add requests library
+
 @app.route('/api/quiz/analyze', methods=['POST'])
 def analyze_quiz():
     try:
         data = request.json
-        answers = data.get('answers', [])
         
-        # Simple heuristic analysis
-        category = "General"
-        roles = ["Office Assistant", "Customer Support"]
-        comment = "You are versatile and can adapt to various environments."
+        # Forward the request to n8n webhook (Server-side forwarding avoids CORS)
+        n8n_url = 'https://alexis123.app.n8n.cloud/webhook/career-quiz-webhook'
         
-        # Check last answer (Interest)
-        if len(answers) >= 3:
-            interest = answers[2]
-            if "Technology" in interest:
-                category = "IT"
-                roles = ["Software Engineer", "Data Analyst", "Product Manager"]
-                comment = "You have a logical mind and a passion for innovation. The tech world needs your problem-solving skills!"
-            elif "Business" in interest:
-                category = "Finance"
-                roles = ["Financial Analyst", "Investment Banker", "Accountant"]
-                comment = "You are strategic and goal-oriented. The fast-paced world of finance and business suits you well."
-            elif "Art" in interest:
-                category = "Design"
-                roles = ["Graphic Designer", "UX/UI Designer", "Art Director"]
-                comment = "You see the world through a creative lens. Design and arts are where your talents will shine."
-            elif "Science" in interest:
-                category = "Engineering"
-                roles = ["Civil Engineer", "Lab Researcher", "Mechanical Engineer"]
-                comment = "Curiosity drives you. Science and engineering offer the complex challenges you crave."
-
-        # Fetch recommended jobs from DB
-        jobs = database.get_jobs(category=category, limit=3)
+        # Use a timeout to prevent hanging if n8n is slow
+        response = requests.post(n8n_url, json=data, timeout=30)
         
-        # If no jobs found in that category, fetch random ones
-        if not jobs:
-            jobs = database.get_jobs(limit=3)
-
-        return jsonify({
-            "analysis": {
-                "category": category,
-                "comment": comment,
-                "roles": roles
-            },
-            "jobs": jobs
-        })
+        if response.status_code == 200:
+            # Try to parse as JSON first
+            try:
+                result = response.json()
+                return jsonify(result)
+            except:
+                # If n8n returns plain text/HTML
+                return jsonify({"report": response.text})
+        else:
+            return jsonify({"error": f"n8n returned status {response.status_code}"}), 502
+            
     except Exception as e:
         print(f"Quiz error: {e}")
         return jsonify({"error": {"message": str(e)}}), 500
