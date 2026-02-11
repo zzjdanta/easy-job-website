@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Career Report - Easy Job</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    @media print {
+      @page {
+        size: A4;
+        margin: 0;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      .no-print {
+        display: none;
+      }
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f5f5f5;
+    }
+    
+    .report-container {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 20px auto;
+      background: white;
+      padding: 12mm;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      color-adjust: exact;
+      visibility: visible;
+      display: block;
+      overflow: visible;
+    }
+    
+    @media screen {
+      .report-container {
+        max-width: 210mm;
+      }
+    }
+    
+    .report-title {
+      font-size: 18pt;
+      font-weight: 900;
+      color: #111;
+      margin-bottom: 4mm;
+      border-bottom: 2px solid #06b6d4;
+      padding-bottom: 2mm;
+      text-align: center;
+      letter-spacing: 0.5px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    
+    .report-section {
+      margin-bottom: 4mm;
+      page-break-inside: avoid;
+    }
+    
+    .section-title {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 2mm;
+      margin-top: 3mm;
+      padding-bottom: 1mm;
+      border-bottom: 1px solid #e5e7eb;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    
+    .section-content {
+      font-size: 9pt;
+      line-height: 1.5;
+      color: #374151;
+      text-align: justify;
+      margin-bottom: 1.5mm;
+    }
+    
+    .section-content ul,
+    .section-content ol {
+      text-align: left;
+      margin-top: 1mm;
+      margin-bottom: 1.5mm;
+      padding-left: 4mm;
+    }
+    
+    .section-content li {
+      margin-bottom: 1mm;
+      line-height: 1.4;
+    }
+    
+    .report-footer {
+      margin-top: 5mm;
+      padding-top: 2mm;
+      border-top: 1px solid #e5e7eb;
+      font-size: 7pt;
+      color: #6b7280;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="report-container">
+    <div id="reportContent">
+      <div class="text-center">
+        <div class="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-cyan-500 mx-auto mb-6"></div>
+        <p class="text-gray-600">Loading report...</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="no-print mt-8 text-center space-x-4 flex justify-center flex-wrap gap-4">
+    <button onclick="downloadPDF()" class="bg-black text-white px-8 py-3 rounded-full font-semibold hover:bg-gray-800">
+      Download as PDF
+    </button>
+    <button onclick="window.print()" class="bg-gray-700 text-white px-8 py-3 rounded-full font-semibold hover:bg-gray-600">
+      Print Report
+    </button>
+    <button onclick="window.close()" class="bg-gray-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-gray-600">
+      Close
+    </button>
+  </div>
+
+  <script>
+    // Get report from URL parameter or localStorage
+    function loadReport() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const reportText = urlParams.get('report') || localStorage.getItem('careerReport');
+      
+      if (!reportText) {
+        document.getElementById('reportContent').innerHTML = 
+          '<div class="text-center py-20">' +
+          '<p class="text-red-600">No report found. Please complete the quiz first.</p>' +
+          '<button onclick="window.close()" class="mt-4 bg-cyan-500 text-white px-8 py-3 rounded-full">Close</button>' +
+          '</div>';
+        return;
+      }
+      
+      // Decode if URL encoded
+      let report = decodeURIComponent(reportText);
+      
+      // Handle JSON format
+      try {
+        const jsonData = JSON.parse(report);
+        if (Array.isArray(jsonData) && jsonData[0] && jsonData[0].output) {
+          report = jsonData[0].output;
+        } else if (jsonData.output) {
+          report = jsonData.output;
+        } else if (jsonData.report) {
+          report = jsonData.report;
+        }
+      } catch (e) {
+        // Not JSON, use as is
+      }
+      
+      // Store for download
+      window.careerReportText = report;
+      
+      // Format and display report
+      displayReport(report);
+    }
+    
+    function displayReport(report) {
+      // Clean up the report text
+      let cleanReport = report.trim();
+      // Remove the default AI title – do not show in report
+      cleanReport = cleanReport.replace(/\s*CAREER ASSESSMENT REPORT FOR HONG KONG JOB MARKET\s*/gi, '').trim();
+      // Strip any leading # or ## from lines so they are not shown as literal text
+      cleanReport = cleanReport.replace(/^#+\s*/gm, '');
+      
+      // Split by sections (##) – after stripping, split by double newline for plain flow
+      const sections = cleanReport.split(/\n\s*\n/).filter(s => s.trim());
+      
+      let html = '<div class="report-title">Your Career Report</div>';
+      
+      // Process each block as plain content (no ## section headers)
+      sections.forEach(section => {
+        const trimmed = section.trim();
+        if (!trimmed) return;
+        // Remove any remaining ## or # in the text
+        const noHash = trimmed.replace(/#+\s*/g, '');
+        const content = noHash.trim();
+        if (!content) return;
+        
+        // Treat first line as optional subheading only if it looks like a short title (no period)
+        const sectionMatch = content.match(/^(.+?)\n([\s\S]*)$/);
+        const sectionTitle = sectionMatch && !sectionMatch[1].includes('.') && sectionMatch[1].length < 60
+          ? sectionMatch[1].trim().replace(/#+\s*/g, '')
+          : null;
+        const mainContent = sectionTitle ? sectionMatch[2].trim() : content;
+        
+        if (sectionTitle && mainContent) {
+          html += '<div class="report-section">';
+          html += '<div class="section-title">' + sectionTitle + '</div>';
+        }
+        const toFormat = (sectionTitle ? mainContent : content).replace(/#+\s*/g, '');
+        if (toFormat) {
+          const content = toFormat;
+          // Process content
+          if (content) {
+            // Handle bullet points
+            if (content.includes('*') && content.split('\n').some(line => line.trim().startsWith('*'))) {
+              const lines = content.split('\n');
+              let inList = false;
+              let listItems = '';
+              
+              lines.forEach(line => {
+                const trimmedLine = line.trim();
+                if (trimmedLine.startsWith('*')) {
+                  if (!inList) {
+                    inList = true;
+                    listItems = '<ul class="section-content" style="list-style: disc; margin-left: 8mm; margin-top: 2mm; margin-bottom: 3mm;">';
+                  }
+                  let itemText = trimmedLine.replace(/^\*\s*/, '').trim();
+                  // Convert ** markdown bold markers to HTML
+                  itemText = itemText.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+                  listItems += '<li style="margin-bottom: 2mm; line-height: 1.6;">' + itemText + '</li>';
+                } else if (trimmedLine && inList) {
+                  listItems += '</ul>';
+                  inList = false;
+                  html += listItems;
+                  listItems = '';
+                  let cleanLine = trimmedLine.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+                  html += '<div class="section-content" style="margin-top: 2mm;">' + cleanLine + '</div>';
+                } else if (trimmedLine && !inList) {
+                  let cleanLine = trimmedLine.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+                  html += '<div class="section-content" style="margin-top: 2mm;">' + cleanLine + '</div>';
+                }
+              });
+              
+              if (inList) {
+                listItems += '</ul>';
+                html += listItems;
+              }
+            }
+            // Handle numbered lists
+            else if (content.match(/^\d+\.\s+/)) {
+              const items = content.split('\n')
+                .filter(line => line.trim())
+                .map(line => {
+                  let text = line.replace(/^\d+\.\s+/, '').trim();
+                  // Convert ** markdown bold markers to HTML
+                  text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+                  return '<li style="margin-bottom: 2mm; line-height: 1.6;">' + text + '</li>';
+                })
+                .join('');
+              html += '<ol class="section-content" style="list-style: decimal; margin-left: 8mm; margin-top: 2mm; margin-bottom: 3mm;">' + items + '</ol>';
+            }
+            // Regular paragraph
+            else {
+              // Split by line breaks and format
+              const paragraphs = content.split(/\n+/).filter(p => p.trim());
+              paragraphs.forEach(para => {
+                let formattedPara = para.trim();
+                // Convert ** markdown bold markers to HTML
+                formattedPara = formattedPara.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+                html += '<div class="section-content" style="margin-top: 2mm; text-indent: 0;">' + formattedPara + '</div>';
+              });
+            }
+          }
+          
+          html += '</div>';
+        }
+        // Handle main title (#)
+        else if (trimmed.match(/^#\s+(.+)$/)) {
+          // Already handled in report-title
+        }
+        // Regular content without section header
+        else if (trimmed) {
+          html += '<div class="section-content">' + trimmed + '</div>';
+        }
+      });
+      
+      html += '<div class="report-footer">Generated on ' + new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) + '</div>';
+      
+      // Set content
+      document.getElementById('reportContent').innerHTML = html;
+      
+      // Clean up HTML entities after rendering
+      setTimeout(() => {
+        const allTextNodes = [];
+        const walker = document.createTreeWalker(
+          document.getElementById('reportContent'),
+          NodeFilter.SHOW_TEXT,
+          null,
+          false
+        );
+        
+        let node;
+        while (node = walker.nextNode()) {
+          if (node.textContent && node.textContent.includes('&amp;')) {
+            node.textContent = node.textContent.replace(/&amp;/g, '&');
+          }
+        }
+        
+        // Remove any control characters
+        const container = document.getElementById('reportContent');
+        if (container) {
+          container.innerHTML = container.innerHTML.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+        }
+      }, 100);
+    }
+    
+    function downloadPDF() {
+      const element = document.querySelector('.report-container');
+      if (!element) {
+        alert('Report content not available');
+        return;
+      }
+      
+      // Check if content is loaded
+      const reportContent = document.getElementById('reportContent');
+      if (!reportContent || reportContent.innerHTML.includes('Loading report')) {
+        alert('Please wait for the report to load completely');
+        return;
+      }
+      
+      // Show loading message
+      const originalButtons = document.querySelector('.no-print');
+      if (originalButtons) {
+        originalButtons.style.opacity = '0.5';
+        originalButtons.style.pointerEvents = 'none';
+      }
+      
+      const date = new Date().toISOString().split('T')[0];
+      const filename = `Career_Report_${date}.pdf`;
+      
+      // Wait for DOM to update and ensure content is visible
+      setTimeout(() => {
+        // Ensure element is visible
+        element.style.visibility = 'visible';
+        element.style.display = 'block';
+        
+        // Configure PDF options - capture all content
+        const opt = {
+          margin: [0, 0, 0, 0],
+          filename: filename,
+          image: { type: 'jpeg', quality: 0.95 },
+          html2canvas: { 
+            scale: 1.5,
+            useCORS: true,
+            letterRendering: true,
+            logging: true,
+            backgroundColor: '#ffffff',
+            allowTaint: true,
+            removeContainer: false,
+            scrollX: 0,
+            scrollY: 0,
+            width: element.scrollWidth,
+            height: element.scrollHeight,
+            windowWidth: element.scrollWidth,
+            windowHeight: element.scrollHeight
+          },
+          jsPDF: { 
+            unit: 'mm', 
+            format: 'a4', 
+            orientation: 'portrait',
+            compress: true
+          },
+          pagebreak: { 
+            mode: ['avoid-all', 'css']
+          }
+        };
+        
+        // Ensure all content is visible and not clipped
+        const originalStyles = {
+          maxHeight: element.style.maxHeight,
+          overflow: element.style.overflow,
+          height: element.style.height
+        };
+        
+        // Remove any height restrictions temporarily
+        element.style.maxHeight = 'none';
+        element.style.overflow = 'visible';
+        element.style.height = 'auto';
+        
+        // Force a reflow to ensure content is rendered
+        element.offsetHeight;
+        
+        // Generate and download PDF
+        html2pdf().set(opt).from(element).save().then(() => {
+          // Restore original styles
+          element.style.maxHeight = originalStyles.maxHeight || '';
+          element.style.overflow = originalStyles.overflow || '';
+          element.style.height = originalStyles.height || '';
+          if (originalButtons) {
+            originalButtons.style.opacity = '1';
+            originalButtons.style.pointerEvents = 'auto';
+          }
+        }).catch((error) => {
+          console.error('PDF generation error:', error);
+          // Restore original styles on error
+          element.style.maxHeight = originalStyles.maxHeight || '';
+          element.style.overflow = originalStyles.overflow || '';
+          element.style.height = originalStyles.height || '';
+          alert('Failed to generate PDF: ' + error.message + '. Please try printing instead.');
+          if (originalButtons) {
+            originalButtons.style.opacity = '1';
+            originalButtons.style.pointerEvents = 'auto';
+          }
+        });
+      }, 500); // Wait 500ms for content to render
+    }
+    
+    // Load report on page load
+    loadReport();
+  </script>
+</body>
+</html>
+

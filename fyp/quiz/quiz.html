@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JOB Quiz - Easy Job</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #fff; }
+    .btn { @apply bg-black text-white px-10 py-4 rounded-full font-semibold hover:bg-gray-800 transition-all duration-300; }
+    .question-step { display: none; }
+    .question-step.active { display: block; }
+    .option-btn { 
+      display: block;
+      width: 100%;
+      text-align: left;
+      background-color: #000;
+      color: #fff;
+      padding: 1.25rem 2rem;
+      border-radius: 9999px;
+      font-size: 1.125rem;
+      font-weight: 500;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+    .option-btn:hover {
+      background-color: #1f2937;
+    }
+    .submit-btn {
+      display: inline-block;
+      width: auto;
+      text-align: center;
+      background-color: #000;
+      color: #fff;
+      padding: 1rem 2.5rem;
+      border-radius: 9999px;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+    .submit-btn:hover {
+      background-color: #1f2937;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Navigation -->
+  <nav class="bg-cyan-500 text-white py-5 shadow-lg">
+    <div class="container mx-auto px-6 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="logo.png" alt="Logo" class="h-10 w-auto">
+        <span class="text-3xl font-bold">EASY<span class="text-2xl"> Easy Job</span></span>
+      </a>
+      <div class="hidden md:flex items-center space-x-10 text-sm font-medium">
+        <a href="index.html" class="hover:underline">Home</a>
+        <a href="quiz.html" class="underline font-bold">JOB Quiz</a>
+        <a href="job-search.html" class="hover:underline">JOB Search</a>
+        <a href="cv-template.html" class="hover:underline">CV Temple</a>
+        <a href="coach.html" class="hover:underline">Interview Coach</a>
+        <a href="login.html" class="bg-black px-6 py-3 rounded-full hover:bg-gray-800">Login</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="flex-1 container mx-auto px-6 py-16 max-w-7xl">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+
+      <!-- Left Section: Question and Options -->
+      <div>
+        <!-- PERSONALITY SECTION (Questions 1-10) -->
+        <!-- Question 1: Social Preference -->
+        <div class="question-step active" data-question="1">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How would you describe<br>your social preference?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="extroverted">Extroverted & Outgoing</button>
+            <button class="option-btn" data-value="introverted">Introverted & Reserved</button>
+            <button class="option-btn" data-value="ambivert">Ambivert & Balanced</button>
+          </div>
+        </div>
+
+        <!-- Question 2: Leadership Style -->
+        <div class="question-step" data-question="2">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            What is your<br>leadership style?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="authoritative">Authoritative & Direct</button>
+            <button class="option-btn" data-value="collaborative">Collaborative & Democratic</button>
+            <button class="option-btn" data-value="supportive">Supportive & Empowering</button>
+          </div>
+        </div>
+
+        <!-- Question 3: Team Preference -->
+        <div class="question-step" data-question="3">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How do you prefer<br>to work with others?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="team">In a Team</button>
+            <button class="option-btn" data-value="solo">Independently</button>
+            <button class="option-btn" data-value="mixed">Mix of Both</button>
+          </div>
+        </div>
+
+        <!-- Question 4: Conflict Handling -->
+        <div class="question-step" data-question="4">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How do you handle<br>conflicts at work?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="confront">Address Directly</button>
+            <button class="option-btn" data-value="mediate">Seek Mediation</button>
+            <button class="option-btn" data-value="avoid">Avoid & De-escalate</button>
+          </div>
+        </div>
+
+        <!-- Question 5: Innovation -->
+        <div class="question-step" data-question="5">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How do you approach<br>new ideas?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="embrace">Embrace & Experiment</button>
+            <button class="option-btn" data-value="evaluate">Evaluate Carefully</button>
+            <button class="option-btn" data-value="cautious">Prefer Proven Methods</button>
+          </div>
+        </div>
+
+        <!-- Question 6: Detail Orientation -->
+        <div class="question-step" data-question="6">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How important are<br>details to you?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="critical">Critical & Essential</button>
+            <button class="option-btn" data-value="important">Important When Needed</button>
+            <button class="option-btn" data-value="bigpicture">Big Picture Focus</button>
+          </div>
+        </div>
+
+        <!-- Question 7: Adaptability -->
+        <div class="question-step" data-question="7">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How do you handle<br>change?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="thrive">Thrive on Change</button>
+            <button class="option-btn" data-value="adapt">Adapt When Necessary</button>
+            <button class="option-btn" data-value="prefer">Prefer Stability</button>
+          </div>
+        </div>
+
+        <!-- Question 8: Confidence -->
+        <div class="question-step" data-question="8">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How confident are you<br>in your abilities?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="very">Very Confident</button>
+            <button class="option-btn" data-value="moderate">Moderately Confident</button>
+            <button class="option-btn" data-value="growing">Growing Confidence</button>
+          </div>
+        </div>
+
+        <!-- Question 9: Stress Management -->
+        <div class="question-step" data-question="9">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How do you manage<br>work stress?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="calm">Stay Calm & Organized</button>
+            <button class="option-btn" data-value="energized">Stress Energizes Me</button>
+            <button class="option-btn" data-value="support">Seek Support</button>
+          </div>
+        </div>
+
+        <!-- Question 10: Values -->
+        <div class="question-step" data-question="10">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            What matters most<br>to you at work?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="impact">Making an Impact</button>
+            <button class="option-btn" data-value="growth">Personal Growth</button>
+            <button class="option-btn" data-value="balance">Work-Life Balance</button>
+          </div>
+        </div>
+
+        <!-- ABILITY SECTION (Questions 11-20) -->
+        <!-- Question 11: Technical Skills -->
+        <div class="question-step" data-question="11">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How would you rate<br>your technical skills?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="expert">Expert Level</button>
+            <button class="option-btn" data-value="proficient">Proficient</button>
+            <button class="option-btn" data-value="learning">Still Learning</button>
+          </div>
+        </div>
+
+        <!-- Question 12: Communication Skills -->
+        <div class="question-step" data-question="12">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How would you rate<br>your communication skills?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="excellent">Excellent</button>
+            <button class="option-btn" data-value="good">Good</button>
+            <button class="option-btn" data-value="improving">Improving</button>
+          </div>
+        </div>
+
+        <!-- Question 13: Problem Solving -->
+        <div class="question-step" data-question="13">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How do you approach<br>problem solving?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="analytical">Analytical & Systematic</button>
+            <button class="option-btn" data-value="creative">Creative & Innovative</button>
+            <button class="option-btn" data-value="practical">Practical & Direct</button>
+          </div>
+        </div>
+
+        <!-- Question 14: Learning Ability -->
+        <div class="question-step" data-question="14">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How quickly do you<br>learn new things?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="very">Very Quickly</button>
+            <button class="option-btn" data-value="moderate">At Moderate Pace</button>
+            <button class="option-btn" data-value="thorough">Thoroughly & Carefully</button>
+          </div>
+        </div>
+
+        <!-- Question 15: Creativity -->
+        <div class="question-step" data-question="15">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How creative<br>are you?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="highly">Highly Creative</button>
+            <button class="option-btn" data-value="moderately">Moderately Creative</button>
+            <button class="option-btn" data-value="practical">More Practical</button>
+          </div>
+        </div>
+
+        <!-- Question 16: Analytical Skills -->
+        <div class="question-step" data-question="16">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How strong are your<br>analytical skills?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="very">Very Strong</button>
+            <button class="option-btn" data-value="good">Good</button>
+            <button class="option-btn" data-value="developing">Developing</button>
+          </div>
+        </div>
+
+        <!-- Question 17: Organization -->
+        <div class="question-step" data-question="17">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How organized<br>are you?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="highly">Highly Organized</button>
+            <button class="option-btn" data-value="moderately">Moderately Organized</button>
+            <button class="option-btn" data-value="flexible">Flexible Approach</button>
+          </div>
+        </div>
+
+        <!-- Question 18: Time Management -->
+        <div class="question-step" data-question="18">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How do you manage<br>your time?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="structured">Structured & Planned</button>
+            <button class="option-btn" data-value="prioritized">Prioritized & Flexible</button>
+            <button class="option-btn" data-value="adaptive">Adaptive & Reactive</button>
+          </div>
+        </div>
+
+        <!-- Question 19: Multitasking -->
+        <div class="question-step" data-question="19">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How do you handle<br>multiple tasks?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="excel">Excel at Multitasking</button>
+            <button class="option-btn" data-value="manage">Manage Well</button>
+            <button class="option-btn" data-value="focus">Prefer Single Focus</button>
+          </div>
+        </div>
+
+        <!-- Question 20: Leadership Ability -->
+        <div class="question-step" data-question="20">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How comfortable are you<br>leading others?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="very">Very Comfortable</button>
+            <button class="option-btn" data-value="moderate">Moderately Comfortable</button>
+            <button class="option-btn" data-value="prefer">Prefer Following</button>
+          </div>
+        </div>
+
+        <!-- EDUCATION SECTION (Questions 21-27) -->
+        <!-- Question 21: Education Level -->
+        <div class="question-step" data-question="21">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            What is your highest<br>education level?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="highschool">High School</button>
+            <button class="option-btn" data-value="bachelor">Bachelor's Degree</button>
+            <button class="option-btn" data-value="graduate">Graduate Degree</button>
+          </div>
+        </div>
+
+        <!-- Question 22: Learning Style -->
+        <div class="question-step" data-question="22">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How do you learn<br>best?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="hands-on">Hands-On Practice</button>
+            <button class="option-btn" data-value="theoretical">Theoretical Study</button>
+            <button class="option-btn" data-value="mixed">Mix of Both</button>
+          </div>
+        </div>
+
+        <!-- Question 23: Continuous Learning -->
+        <div class="question-step" data-question="23">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How important is<br>continuous learning?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="essential">Essential</button>
+            <button class="option-btn" data-value="important">Important</button>
+            <button class="option-btn" data-value="occasional">Occasionally</button>
+          </div>
+        </div>
+
+        <!-- Question 24: Field of Study -->
+        <div class="question-step" data-question="24">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            What field interests<br>you most?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="tech">Technology & IT</button>
+            <button class="option-btn" data-value="business">Business & Management</button>
+            <button class="option-btn" data-value="creative">Creative & Arts</button>
+          </div>
+        </div>
+
+        <!-- Question 25: Certifications -->
+        <div class="question-step" data-question="25">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How important are<br>certifications to you?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="very">Very Important</button>
+            <button class="option-btn" data-value="somewhat">Somewhat Important</button>
+            <button class="option-btn" data-value="less">Less Important</button>
+          </div>
+        </div>
+
+        <!-- Question 26: Experience vs Education -->
+        <div class="question-step" data-question="26">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            What matters more<br>to you?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="experience">Practical Experience</button>
+            <button class="option-btn" data-value="education">Formal Education</button>
+            <button class="option-btn" data-value="both">Both Equally</button>
+          </div>
+        </div>
+
+        <!-- Question 27: Research Interest -->
+        <div class="question-step" data-question="27">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How interested are you<br>in research?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="very">Very Interested</button>
+            <button class="option-btn" data-value="moderate">Moderately Interested</button>
+            <button class="option-btn" data-value="less">Less Interested</button>
+          </div>
+        </div>
+
+        <!-- CONDITION SECTION (Questions 28-35) -->
+        <!-- Question 28: Work Location -->
+        <div class="question-step" data-question="28">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            What is your preferred<br>work location?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="remote">Remote</button>
+            <button class="option-btn" data-value="office">Office</button>
+            <button class="option-btn" data-value="hybrid">Hybrid</button>
+          </div>
+        </div>
+
+        <!-- Question 29: Work Schedule -->
+        <div class="question-step" data-question="29">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            What work schedule<br>do you prefer?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="flexible">Flexible Hours</button>
+            <button class="option-btn" data-value="fixed">Fixed Schedule</button>
+            <button class="option-btn" data-value="part-time">Part-Time</button>
+          </div>
+        </div>
+
+        <!-- Question 30: Salary Priority -->
+        <div class="question-step" data-question="30">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How important is<br>salary to you?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="critical">Critical Priority</button>
+            <button class="option-btn" data-value="important">Important</button>
+            <button class="option-btn" data-value="balanced">Balanced with Other Factors</button>
+          </div>
+        </div>
+
+        <!-- Question 31: Benefits -->
+        <div class="question-step" data-question="31">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            What benefits matter<br>most to you?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="health">Health Insurance</button>
+            <button class="option-btn" data-value="retirement">Retirement Plans</button>
+            <button class="option-btn" data-value="time">Time Off & Flexibility</button>
+          </div>
+        </div>
+
+        <!-- Question 32: Work-Life Balance -->
+        <div class="question-step" data-question="32">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How important is<br>work-life balance?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="essential">Essential</button>
+            <button class="option-btn" data-value="important">Important</button>
+            <button class="option-btn" data-value="flexible">Flexible</button>
+          </div>
+        </div>
+
+        <!-- Question 33: Career Growth -->
+        <div class="question-step" data-question="33">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            How important is<br>career growth?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="critical">Critical</button>
+            <button class="option-btn" data-value="important">Important</button>
+            <button class="option-btn" data-value="moderate">Moderate</button>
+          </div>
+        </div>
+
+        <!-- Question 34: Company Size -->
+        <div class="question-step" data-question="34">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            What company size<br>do you prefer?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="startup">Startup & Small</button>
+            <button class="option-btn" data-value="medium">Medium Size</button>
+            <button class="option-btn" data-value="large">Large Corporation</button>
+          </div>
+        </div>
+
+        <!-- Question 35: Industry Preference -->
+        <div class="question-step" data-question="35">
+          <h1 class="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-16">
+            What industry<br>interests you most?
+          </h1>
+          <div class="space-y-5 max-w-sm">
+            <button class="option-btn" data-value="tech">Technology</button>
+            <button class="option-btn" data-value="finance">Finance & Banking</button>
+            <button class="option-btn" data-value="healthcare">Healthcare</button>
+          </div>
+        </div>
+
+        <!-- Loading/Result Step -->
+        <div class="question-step" data-question="result">
+          <div id="resultContent" class="max-w-3xl mx-auto">
+            <div class="text-center py-20">
+              <div class="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-cyan-500 mx-auto mb-6"></div>
+              <h2 class="text-3xl font-bold text-gray-900 mb-4">Analyzing Your Responses...</h2>
+              <p class="text-gray-600">Generating your personalized career report</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="mt-20 flex gap-8">
+          <button id="prevBtn" class="btn" style="display: none;">Previous</button>
+          <button id="submitBtn" class="submit-btn" style="display: none;">Submit Quiz</button>
+        </div>
+      </div>
+
+      <!-- Right Section: Image Display -->
+      <div class="flex justify-center">
+        <div class="relative">
+          <!-- MacBook Frame + Traffic Lights -->
+          <div class="bg-white rounded-3xl shadow-2xl overflow-hidden p-4 md:p-8">
+            <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-96 md:h-full">
+              <img src="jobquiz1.jpeg" alt="Quiz Image" class="w-full h-full object-cover rounded-xl" id="quizImage">
+            </div>
+          </div>
+          <div class="absolute top-8 left-8 flex gap-2">
+            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Quiz data structure - 35 questions covering Personality, Ability, Education, and Condition
+    const quizData = {
+      // Personality (1-10)
+      socialPreference: null,
+      leadershipStyle: null,
+      teamPreference: null,
+      conflictHandling: null,
+      innovation: null,
+      detailOrientation: null,
+      adaptability: null,
+      confidence: null,
+      stressManagement: null,
+      values: null,
+      // Ability (11-20)
+      technicalSkills: null,
+      communicationSkills: null,
+      problemSolving: null,
+      learningAbility: null,
+      creativity: null,
+      analyticalSkills: null,
+      organization: null,
+      timeManagement: null,
+      multitasking: null,
+      leadershipAbility: null,
+      // Education (21-27)
+      educationLevel: null,
+      learningStyle: null,
+      continuousLearning: null,
+      fieldOfStudy: null,
+      certifications: null,
+      experienceVsEducation: null,
+      researchInterest: null,
+      // Condition (28-35)
+      workLocation: null,
+      workSchedule: null,
+      salaryPriority: null,
+      benefits: null,
+      workLifeBalance: null,
+      careerGrowth: null,
+      companySize: null,
+      industryPreference: null
+    };
+
+    const fieldMapping = {
+      // Personality
+      1: 'socialPreference',
+      2: 'leadershipStyle',
+      3: 'teamPreference',
+      4: 'conflictHandling',
+      5: 'innovation',
+      6: 'detailOrientation',
+      7: 'adaptability',
+      8: 'confidence',
+      9: 'stressManagement',
+      10: 'values',
+      // Ability
+      11: 'technicalSkills',
+      12: 'communicationSkills',
+      13: 'problemSolving',
+      14: 'learningAbility',
+      15: 'creativity',
+      16: 'analyticalSkills',
+      17: 'organization',
+      18: 'timeManagement',
+      19: 'multitasking',
+      20: 'leadershipAbility',
+      // Education
+      21: 'educationLevel',
+      22: 'learningStyle',
+      23: 'continuousLearning',
+      24: 'fieldOfStudy',
+      25: 'certifications',
+      26: 'experienceVsEducation',
+      27: 'researchInterest',
+      // Condition
+      28: 'workLocation',
+      29: 'workSchedule',
+      30: 'salaryPriority',
+      31: 'benefits',
+      32: 'workLifeBalance',
+      33: 'careerGrowth',
+      34: 'companySize',
+      35: 'industryPreference'
+    };
+
+    let currentQuestion = 1;
+    const totalQuestions = 35;
+
+    // Initialize quiz
+    function initQuiz() {
+      updateNavigation();
+      setupOptionButtons();
+    }
+
+    // Setup option button click handlers
+    function setupOptionButtons() {
+      document.querySelectorAll('.option-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const questionDiv = this.closest('.question-step');
+          const questionNum = parseInt(questionDiv.dataset.question);
+          const value = this.dataset.value;
+          
+          // Save answer
+          if (fieldMapping[questionNum]) {
+            quizData[fieldMapping[questionNum]] = value;
+          }
+          
+          // Update button styles - keep black, just remove selection from others
+          questionDiv.querySelectorAll('.option-btn').forEach(b => {
+            b.classList.remove('selected');
+          });
+          this.classList.add('selected');
+          
+          // Auto-advance after a short delay (only if answer is selected)
+          setTimeout(() => {
+            if (currentQuestion < totalQuestions) {
+              nextQuestion();
+              updateImage();
+            } else {
+              showSubmitButton();
+            }
+          }, 300);
+        });
+      });
+    }
+    
+
+    // Image mapping - cycle through available images for 35 questions
+    const availableImages = [
+      'jobquiz1.jpeg',
+      'jobquiz2.jpg',
+      'jobquiz3.jpeg',
+      'jobquiz4.jpeg',
+      'jobquiz5.jpeg',
+      'jobquiz6.jpeg',
+      'jobquiz7.jpeg',
+      'jobquiz8.jpeg',
+      'jobquiz9.jpeg',
+      'jobquiz10.png'
+    ];
+    
+    // Update image based on current question (cycle through images)
+    function updateImage() {
+      const img = document.getElementById('quizImage');
+      let imagePath;
+      
+      if (typeof currentQuestion === 'number') {
+        // Cycle through available images
+        const imageIndex = ((currentQuestion - 1) % availableImages.length);
+        imagePath = availableImages[imageIndex];
+      } else {
+        imagePath = 'job.png'; // Default for result page
+      }
+      
+      img.src = imagePath;
+      img.alt = `Quiz Image ${currentQuestion}`;
+    }
+
+    // Show specific question
+    function showQuestion(num) {
+      document.querySelectorAll('.question-step').forEach(step => {
+        step.classList.remove('active');
+      });
+      
+      const questionStep = document.querySelector(`.question-step[data-question="${num}"]`);
+      if (questionStep) {
+        questionStep.classList.add('active');
+      }
+      
+      // Restore selected answer if exists
+      if (typeof num === 'number' && num <= totalQuestions) {
+        const fieldName = fieldMapping[num];
+        const savedValue = quizData[fieldName];
+        if (savedValue) {
+          questionStep.querySelectorAll('.option-btn').forEach(btn => {
+            btn.classList.remove('selected');
+            if (btn.dataset.value === savedValue) {
+              btn.classList.add('selected');
+            }
+          });
+        }
+      }
+      
+      updateNavigation();
+      if (typeof num === 'number') {
+        updateImage();
+      }
+    }
+
+    // Update navigation buttons
+    function updateNavigation() {
+      const prevBtn = document.getElementById('prevBtn');
+      const submitBtn = document.getElementById('submitBtn');
+      
+      prevBtn.style.display = currentQuestion > 1 ? 'block' : 'none';
+      
+      // Show submit button only on last question and if answered
+      if (currentQuestion === totalQuestions) {
+        const fieldName = fieldMapping[currentQuestion];
+        const isAnswered = quizData[fieldName] !== null;
+        submitBtn.style.display = isAnswered ? 'block' : 'none';
+      } else {
+        submitBtn.style.display = 'none';
+      }
+    }
+
+    // Show submit button
+    function showSubmitButton() {
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.style.display = 'block';
+    }
+
+    // Next question (only if current question is answered)
+    function nextQuestion() {
+      if (currentQuestion < totalQuestions) {
+        const fieldName = fieldMapping[currentQuestion];
+        // Only advance if current question is answered
+        if (quizData[fieldName] !== null) {
+          currentQuestion++;
+          showQuestion(currentQuestion);
+        }
+      }
+    }
+
+    // Previous question
+    function prevQuestion() {
+      if (currentQuestion > 1) {
+        currentQuestion--;
+        showQuestion(currentQuestion);
+      }
+    }
+
+    // Submit quiz
+    async function submitQuiz() {
+      // Validate all questions answered
+      const missingFields = [];
+      for (const [key, value] of Object.entries(quizData)) {
+        if (value === null) {
+          missingFields.push(key);
+        }
+      }
+      
+      if (missingFields.length > 0) {
+        alert('Please answer all questions before submitting.');
+        // Go to first unanswered question
+        for (let i = 1; i <= totalQuestions; i++) {
+          if (missingFields.includes(fieldMapping[i])) {
+            currentQuestion = i;
+            showQuestion(i);
+            break;
+          }
+        }
+        return;
+      }
+      
+      // Show loading step
+      currentQuestion = 'result';
+      showQuestion('result');
+      document.getElementById('prevBtn').style.display = 'none';
+      // nextBtn doesn't exist in HTML, so check if it exists before accessing
+      const nextBtn = document.getElementById('nextBtn');
+      if (nextBtn) {
+        nextBtn.style.display = 'none';
+      }
+      document.getElementById('submitBtn').style.display = 'none';
+      
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      // Submit to n8n webhook
+      try {
+        // Debug: Log data being sent
+        console.log('Sending quiz data:', quizData);
+        console.log('Data count:', Object.keys(quizData).length);
+        console.log('Webhook URL:', 'https://alexis123.app.n8n.cloud/webhook-test/career-quiz-webhook');
+        
+        const response = await fetch('https://alexis123.app.n8n.cloud/webhook-test/career-quiz-webhook', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(quizData),
+          mode: 'cors' 
+        });
+        
+        console.log('Response status:', response.status);
+        console.log('Response OK:', response.ok);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        let careerReport = await response.text();
+        
+        // Handle JSON response format (if n8n returns JSON)
+        try {
+          const jsonData = JSON.parse(careerReport);
+          if (Array.isArray(jsonData) && jsonData[0] && jsonData[0].output) {
+            careerReport = jsonData[0].output;
+          } else if (jsonData.output) {
+            careerReport = jsonData.output;
+          } else if (jsonData.report) {
+            careerReport = jsonData.report;
+          } else if (typeof jsonData === 'string') {
+            careerReport = jsonData;
+          }
+        } catch (e) {
+          // Not JSON, use as is
+        }
+        
+        // Store raw report for download
+        window.careerReportText = careerReport;
+        
+        // Format the report with better styling
+        let formattedReport = careerReport
+          .split('\n\n') // Split by double newlines for paragraphs
+          .map(para => {
+            if (!para.trim()) return '';
+            
+            // Main headings (#)
+            if (para.match(/^#\s+(.+)$/)) {
+              return '<h2 class="text-3xl font-bold text-gray-900 mt-10 mb-6 pb-3 border-b-2 border-cyan-500">' + para.replace(/^#\s+/, '') + '</h2>';
+            }
+            
+            // Subheadings (##)
+            if (para.match(/^##\s+(.+)$/)) {
+              return '<h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">' + para.replace(/^##\s+/, '') + '</h3>';
+            }
+            
+            // Sub-subheadings (###)
+            if (para.match(/^###\s+(.+)$/)) {
+              return '<h4 class="text-xl font-semibold text-gray-700 mt-6 mb-3">' + para.replace(/^###\s+/, '') + '</h4>';
+            }
+            
+            // Bullet points
+            if (para.includes('-') && para.split('\n').every(line => line.trim().startsWith('-'))) {
+              const items = para.split('\n')
+                .filter(line => line.trim())
+                .map(line => '<li class="ml-6 mb-2 text-gray-700">' + line.replace(/^-\s+/, '').trim() + '</li>')
+                .join('');
+              return '<ul class="list-disc ml-8 mb-6 space-y-2">' + items + '</ul>';
+            }
+            
+            // Numbered lists
+            if (para.match(/^\d+\.\s+/)) {
+              const items = para.split('\n')
+                .filter(line => line.trim())
+                .map(line => {
+                  const text = line.replace(/^\d+\.\s+/, '').trim();
+                  return '<li class="ml-6 mb-2 text-gray-700">' + text + '</li>';
+                })
+                .join('');
+              return '<ol class="list-decimal ml-8 mb-6 space-y-2">' + items + '</ol>';
+            }
+            
+            // Bold text
+            para = para.replace(/\*\*(.+?)\*\*/g, '<strong class="font-bold text-gray-900">$1</strong>');
+            para = para.replace(/\*(.+?)\*/g, '<em class="italic">$1</em>');
+            
+            // Regular paragraph
+            return '<p class="mb-4 text-gray-700 leading-relaxed">' + para + '</p>';
+          })
+          .filter(para => para)
+          .join('');
+        
+        // Store report for report.html
+        localStorage.setItem('careerReport', careerReport);
+        
+        // Show success message and open report in new window
+        document.getElementById('resultContent').innerHTML = 
+          '<div class="max-w-2xl mx-auto text-center py-20">' +
+          '<div class="text-green-500 text-6xl mb-6">✓</div>' +
+          '<h2 class="text-3xl font-bold text-gray-900 mb-4">Report Generated Successfully!</h2>' +
+          '<p class="text-gray-600 mb-8">Your career report is ready to view</p>' +
+          '<div class="space-x-4 flex justify-center flex-wrap gap-4">' +
+          '<button onclick="openReport()" class="submit-btn">View Report</button>' +
+          '<button onclick="location.reload()" class="submit-btn">Take Quiz Again</button>' +
+          '</div>' +
+          '</div>';
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('resultContent').innerHTML = 
+          '<div class="text-center py-20">' +
+          '<div class="text-red-500 text-6xl mb-6">⚠️</div>' +
+          '<h2 class="text-3xl font-bold text-gray-900 mb-4">Oops! Something went wrong</h2>' +
+          '<p class="text-gray-600 mb-8">' + error.message + '</p>' +
+          '<button onclick="location.reload()" class="submit-btn">Try Again</button>' +
+          '</div>';
+      }
+    }
+
+    // Open report in new window
+    function openReport() {
+      const reportText = window.careerReportText || localStorage.getItem('careerReport');
+      if (reportText) {
+        const encodedReport = encodeURIComponent(reportText);
+        window.open(`report.html?report=${encodedReport}`, '_blank', 'width=800,height=1000');
+      }
+    }
+
+    // Event listeners
+    document.getElementById('prevBtn').addEventListener('click', prevQuestion);
+    document.getElementById('submitBtn').addEventListener('click', submitQuiz);
+
+    // Initialize on page load
+    initQuiz();
+    updateImage(); // Set initial image
+  </script>
+</body>
+</html>
