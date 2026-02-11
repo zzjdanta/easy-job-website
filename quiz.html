@@ -819,14 +819,11 @@
         console.log('Data count:', Object.keys(quizData).length);
         console.log('Webhook URL:', 'https://alexis123.app.n8n.cloud/webhook/career-quiz-webhook');
         
-        // Use a reliable CORS proxy as a fallback if n8n blocks requests
-        // Note: Using 'https://corsproxy.io/?' + encodedURL
+        // Direct request to n8n (Requires CORS plugin or n8n CORS enabled)
         const n8nUrl = 'https://alexis123.app.n8n.cloud/webhook/career-quiz-webhook';
-        const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(n8nUrl);
-        
-        console.log('Trying with CORS Proxy:', proxyUrl);
+        console.log('Sending request directly to:', n8nUrl);
 
-        const response = await fetch(proxyUrl, {
+        const response = await fetch(n8nUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
