@@ -819,7 +819,11 @@
         console.log('Data count:', Object.keys(quizData).length);
         console.log('Webhook URL:', '/api/quiz/analyze');
         
-        const response = await fetch('/api/quiz/analyze', {
+        // Use full URL to avoid relative path issues if needed
+        const apiUrl = window.location.origin + '/api/quiz/analyze';
+        console.log('Sending request to:', apiUrl);
+
+        const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

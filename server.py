@@ -128,12 +128,17 @@ import requests # Add requests library
 def analyze_quiz():
     try:
         data = request.json
+        print(f"Received quiz data: {len(data)} fields") # Debug log
         
         # Forward the request to n8n webhook (Server-side forwarding avoids CORS)
         n8n_url = 'https://alexis123.app.n8n.cloud/webhook/career-quiz-webhook'
         
+        print(f"Forwarding to n8n: {n8n_url}") # Debug log
+        
         # Use a timeout to prevent hanging if n8n is slow
         response = requests.post(n8n_url, json=data, timeout=30)
+        
+        print(f"n8n response status: {response.status_code}") # Debug log
         
         if response.status_code == 200:
             # Try to parse as JSON first
