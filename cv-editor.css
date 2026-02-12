@@ -1,0 +1,18 @@
+/* CV Editor – step wizard, tags, remove buttons */
+.step { display: none; }
+.step.active { display: block; }
+
+.tag {
+  background: #e5e7eb;
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin: 4px;
+  display: inline-block;
+  font-size: 14px;
+}
+
+.remove {
+  color: #ef4444;
+  cursor: pointer;
+  margin-left: 8px;
+}

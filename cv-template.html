@@ -18,13 +18,14 @@
   <!-- 导航栏保持不变 -->
   <nav class="bg-cyan-500 text-white py-4 shadow-lg">
     <div class="container mx-auto px-4 flex items-center justify-between">
-      <a href="index.html" class="flex items-center space-x-2 text-xl font-bold">
-        <span class="text-3xl">EASY</span><span class="text-2xl">Easy Job</span>
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="logo.png" alt="Logo" class="h-10 w-auto">
+        <span class="text-3xl font-bold">EASY<span class="text-2xl"> Easy Job</span></span>
       </a>
       <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
         <a href="index.html" class="hover:underline">Home</a>
         <a href="quiz.html" class="hover:underline">JOB Quiz</a>
-        <a href="job-search.html" class="hover:underline">JOB Search</a>
+        <a href="search.html" class="hover:underline">JOB Search</a>
         <a href="cv-template.html" class="underline font-bold">CV Template</a>
         <a href="coach.html" class="hover:underline">Interview Coach</a>
         <a href="login.html" class="bg-black px-5 py-2 rounded-full hover:bg-gray-800 transition">Login</a>
@@ -33,13 +34,14 @@
   </nav>
 
   <div class="flex-1 container mx-auto px-4 py-12">
-    <h1 class="text-4xl md:text-5xl font-black text-gray-900 text-center mb-12">
-      Choose The Template
+    <h1 class="text-4xl md:text-5xl font-black text-gray-900 text-center mb-4">
+      CV Template
     </h1>
+    <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+      Choose your template first, then enter your details and we’ll generate your CV in that style.
+    </p>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
-
-      <!-- 1. 黑白經典（改這裡加上 data-template） -->
       <div class="template-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer"
            data-template="black-white" onclick="chooseTemplate(this, 'black-white')">
         <img src="black.png" alt="Black and White CV" class="w-full">
@@ -48,8 +50,6 @@
           <p class="text-gray-600 mt-2">簡潔大氣，適合金融、法律、傳統行業</p>
         </div>
       </div>
-
-      <!-- 2. 灰色現代 -->
       <div class="template-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer"
            data-template="grey-modern" onclick="chooseTemplate(this, 'grey-modern')">
         <img src="grey.png" alt="Grey Modern CV" class="w-full">
@@ -58,8 +58,6 @@
           <p class="text-gray-600 mt-2">極簡設計感，適合創意、設計、科技公司</p>
         </div>
       </div>
-
-      <!-- 3. 米棕藍暖色 -->
       <div class="template-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer"
            data-template="beige-brown" onclick="chooseTemplate(this, 'beige-brown')">
         <img src="beige.png" alt="Beige Brown Blue CV" class="w-full">
@@ -68,41 +66,28 @@
           <p class="text-gray-600 mt-2">溫暖優雅，適合教育、市場營銷、客戶服務</p>
         </div>
       </div>
-
     </div>
 
     <div class="text-center mt-16">
       <button id="nextBtn" disabled
               class="bg-black text-white px-12 py-4 rounded-full text-lg font-semibold transition opacity-50 cursor-not-allowed">
-        Next
+        Start building your CV
       </button>
-      <p class="text-sm text-gray-500 mt-4">請先選擇一個模板</p>
+      <p class="text-sm text-gray-500 mt-4">Please select a template first</p>
     </div>
   </div>
 
   <script>
     let selected = '';
-
     function chooseTemplate(element, id) {
-      // 取消其他卡片的高亮
-      document.querySelectorAll('.template-card').forEach(card => {
-        card.classList.remove('selected');
-      });
-
-      // 高亮當前選擇
+      document.querySelectorAll('.template-card').forEach(card => card.classList.remove('selected'));
       element.classList.add('selected');
       selected = id;
-
-      // 啟用按鈕
       const btn = document.getElementById('nextBtn');
       btn.disabled = false;
       btn.classList.remove('opacity-50', 'cursor-not-allowed');
-      btn.classList.add('hover:bg-gray-800', 'bg-gray-900');
-
-      // 點擊 Next 跳轉並帶參數
-      btn.onclick = () => {
-        location.href = `cv-editor.html?template=${selected}`;
-      };
+      btn.classList.add('hover:bg-gray-800');
+      btn.onclick = () => { location.href = 'cv-editor.html?template=' + selected; };
     }
   </script>
 </body>

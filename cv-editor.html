@@ -6,18 +6,17 @@
   <title>製作 CV - Easy Job</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <style>
-    .step{display:none}.step.active{display:block}
-    .tag{background:#e5e7eb;padding:4px 12px;border-radius:999px;margin:4px;display:inline-block;font-size:14px}
-    .remove{color:#ef4444;cursor:pointer;margin-left:8px}
-  </style>
+  <link href="cv-editor.css" rel="stylesheet">
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
 
 <!-- 导航栏 -->
 <nav class="bg-cyan-500 text-white py-4 shadow-lg">
   <div class="container mx-auto px-4 flex items-center justify-between">
-    <a href="index.html" class="text-3xl font-bold">EASY<span class="text-2xl"> Easy Job</span></a>
+    <a href="index.html" class="flex items-center gap-3">
+      <img src="logo.png" alt="Logo" class="h-10 w-auto">
+      <span class="text-3xl font-bold">EASY<span class="text-2xl"> Easy Job</span></span>
+    </a>
     <div class="hidden md:flex space-x-8">
       <a href="cv-template.html" class="underline font-bold">CV Template</a>
       <a href="login.html" class="bg-black px-6 py-2 rounded-full">Login</a>
@@ -27,13 +26,14 @@
 
 <div class="flex-1 container mx-auto max-w-5xl px-4 py-8">
   <div class="text-center mb-8">
-    <span class="text-3xl font-bold text-cyan-600">Step <span id="cur">1</span>/6</span>
+    <span class="text-3xl font-bold text-cyan-600">Step <span id="cur">1</span>/7</span>
   </div>
 
   <form id="form">
     <!-- Step 1：基本信息 + 头像 -->
     <div class="step active bg-white rounded-2xl shadow-lg p-8" id="step1">
       <h2 class="text-3xl font-bold mb-8">Basic Information</h2>
+      <p class="text-gray-600 mb-6">What's the best way for employers to contact you? We suggest including name, job title, email and phone.</p>
       <div class="grid md:grid-cols-3 gap-6">
         <input type="text" data-key="firstName" placeholder="First Name *" required class="border rounded-lg px-4 py-3">
         <input type="text" data-key="lastName" placeholder="Last Name *" required class="border rounded-lg px-4 py-3">
@@ -42,7 +42,7 @@
         <input type="email" data-key="email" placeholder="Email *" required class="border rounded-lg px-4 py-3 md:col-span-2">
         <input type="text" data-key="address" placeholder="Address" class="border rounded-lg px-4 py-3 md:col-span-3">
         <div class="md:col-span-3">
-          <label class="block font-medium mb-2">頭像（圓形）</label>
+          <label class="block font-medium mb-2">Profile photo (optional)</label>
           <input type="file" id="photoInput" accept="image/*" class="border rounded-lg p-3 w-full">
         </div>
       </div>
@@ -51,6 +51,7 @@
     <!-- Step 2：Skills & Language -->
     <div class="step bg-white rounded-2xl shadow-lg p-8" id="step2">
       <h2 class="text-3xl font-bold mb-8">Skills & Language</h2>
+      <p class="text-gray-600 mb-6">List your professional skills and languages. These help recruiters see your strengths at a glance.</p>
       <div class="grid md:grid-cols-2 gap-10">
         <div>
           <h3 class="text-xl font-bold mb-4">Professional Skills</h3>
@@ -68,6 +69,7 @@
     <!-- Step 3：Education -->
     <div class="step bg-white rounded-2xl shadow-lg p-8" id="step3">
       <h2 class="text-3xl font-bold mb-8">Education</h2>
+      <p class="text-gray-600 mb-6">Include your degree, school name and dates. Start with the most recent.</p>
       <div id="eduBox"></div>
       <button type="button" onclick="addEdu()" class="text-cyan-600">+ Add Education</button>
     </div>
@@ -75,6 +77,7 @@
     <!-- Step 4：Work Experience -->
     <div class="step bg-white rounded-2xl shadow-lg p-8" id="step4">
       <h2 class="text-3xl font-bold mb-8">Work Experience</h2>
+      <p class="text-gray-600 mb-6">Employers scan your resume to see if you're a match. Start with your most recent role. Use AI to suggest bullet points that make a strong impression.</p>
       <div id="expBox"></div>
       <button type="button" onclick="addExp()" class="text-cyan-600">+ Add Experience</button>
     </div>
@@ -82,19 +85,94 @@
     <!-- Step 5：About Me -->
     <div class="step bg-white rounded-2xl shadow-lg p-8" id="step5">
       <h2 class="text-3xl font-bold mb-8">About Me</h2>
-      <textarea data-key="about" placeholder="寫一點關於自己的介紹..." class="border rounded-lg w-full h-64 p-4"></textarea>
+      <p class="text-gray-600 mb-4">Give recruiters a quick glimpse of your profile in 3–4 lines. Highlight your background, key skills and what you offer.</p>
+      <textarea data-key="about" id="aboutTextarea" placeholder="e.g. Qualified professional with X years of experience in..." class="border rounded-lg w-full h-48 p-4"></textarea>
+      <button type="button" onclick="improveAboutWithAI()" class="mt-3 text-cyan-600 font-medium">Improve with AI</button>
     </div>
 
-    <!-- Step 6：真實預覽 + 下載 -->
+    <!-- Step 6：生成 CV (template chosen on cv-template.html) -->
     <div class="step bg-white rounded-2xl shadow-lg p-10" id="step6">
-      <h2 class="text-3xl font-bold text-center mb-10">Your CV（所見即所得）</h2>
-      <div class="bg-gray-100 rounded-xl p-8 overflow-x-auto">
-        <div id="preview" class="mx-auto"></div>
+      <h2 class="text-3xl font-bold text-center mb-10">Generate Your CV</h2>
+      <p class="text-center text-gray-600 mb-8">Your CV will be generated in the template style you chose earlier.</p>
+      <div class="max-w-2xl mx-auto">
+        <div class="text-center py-8">
+          <div class="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-cyan-500 mb-4 hidden" id="cvLoading"></div>
+          <p class="text-lg text-gray-600 mb-8 hidden" id="cvLoadingText">Generating your CV...</p>
+          <button type="button" onclick="generateCV()" 
+                  class="bg-black text-white px-16 py-5 rounded-full text-xl font-bold hover:bg-gray-800">
+            Generate CV
+          </button>
+        </div>
+        <div id="cvResult" class="hidden mt-8">
+          <div class="bg-gray-50 rounded-xl p-8 border-2 border-gray-200">
+            <h3 class="text-2xl font-bold mb-4">Your Generated CV</h3>
+            <div id="cvContent" class="bg-white p-6 rounded-lg min-h-200"></div>
+            <div class="mt-6 text-center flex flex-wrap justify-center gap-3">
+              <button type="button" onclick="downloadCVPDF()" class="bg-black text-white px-8 py-3 rounded-full font-semibold hover:bg-gray-800">Download as PDF</button>
+              <button type="button" onclick="next()" class="bg-cyan-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-cyan-600">Generate Cover Letter</button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="text-center mt-10">
-        <button type="button" onclick="download()" class="bg-black text-white px-16 py-5 rounded-full text-xl font-bold hover:bg-gray-800">
-          Download PDF
-        </button>
+    </div>
+
+    <!-- Step 7：生成求職信 -->
+    <div class="step bg-white rounded-2xl shadow-lg p-10" id="step7">
+      <h2 class="text-3xl font-bold text-center mb-10">Generate Cover Letter</h2>
+      <p class="text-center text-gray-600 mb-8 max-w-xl mx-auto">The letter will be tailored using the information you entered in the previous steps (experience, skills, education, etc.).</p>
+      <div class="max-w-2xl mx-auto space-y-6">
+        <div>
+          <label class="block text-lg font-semibold mb-3">Job Type *</label>
+          <select id="jobType" required class="border rounded-lg px-4 py-3 w-full text-lg bg-white">
+            <option value="">— Select job type —</option>
+            <option value="Technology & IT">Technology & IT</option>
+            <option value="Finance & Accounting">Finance & Accounting</option>
+            <option value="Marketing & Sales">Marketing & Sales</option>
+            <option value="Healthcare">Healthcare</option>
+            <option value="Education">Education</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Design & Creative">Design & Creative</option>
+            <option value="Administration">Administration</option>
+            <option value="Human Resources">Human Resources</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-lg font-semibold mb-3">Position *</label>
+          <input type="text" id="position" placeholder="e.g. Software Engineer, Marketing Manager" required 
+                 class="border rounded-lg px-4 py-3 w-full text-lg">
+        </div>
+        <div>
+          <label class="block text-lg font-semibold mb-3">Company Name *</label>
+          <input type="text" id="companyName" placeholder="e.g. Google, Microsoft" required 
+                 class="border rounded-lg px-4 py-3 w-full text-lg">
+        </div>
+        <div class="text-center pt-6">
+          <button type="button" onclick="generateCoverLetter()" 
+                  class="bg-black text-white px-16 py-5 rounded-full text-xl font-bold hover:bg-gray-800">
+            Generate Cover Letter
+          </button>
+        </div>
+        <div id="coverLetterResult" class="mt-8 hidden">
+          <div class="bg-gray-50 rounded-xl p-8 border-2 border-gray-200">
+            <h3 class="text-2xl font-bold mb-4">Your Cover Letter</h3>
+            <div id="coverLetterContent" class="prose max-w-none whitespace-pre-wrap text-gray-700"></div>
+            <div class="mt-6 text-center space-x-4">
+              <button type="button" onclick="copyCoverLetter()" 
+                      class="bg-cyan-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-cyan-600">
+                Copy to Clipboard
+              </button>
+              <button type="button" onclick="downloadCoverLetter()" 
+                      class="bg-black text-white px-8 py-3 rounded-full font-semibold hover:bg-gray-800">
+                Download as Text
+              </button>
+            </div>
+          </div>
+        </div>
+        <div id="coverLetterLoading" class="hidden text-center py-12">
+          <div class="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-cyan-500 mb-4"></div>
+          <p class="text-lg text-gray-600">Generating your personalized cover letter...</p>
+        </div>
       </div>
     </div>
 
@@ -105,156 +183,6 @@
   </form>
 </div>
 
-<script>
-// 读取模板
-const url = new URLSearchParams(location.search);
-const tmpl = url.get('template') || 'black-white';
-let photo = 'user.jpg';
-document.getElementById('photoInput').onchange = e => {
-  if(e.target.files[0]) photo = URL.createObjectURL(e.target.files[0]);
-};
-
-// 三套真实模板（像素级还原你三张图）
-const templates = {
-  'black-white': `<div style="width:210mm;min-height:297mm;background:#fff;padding:20mm;font-family:Arial,sans-serif;color:#000;">
-    <div style="display:flex;gap:20mm;">
-      <img src="${photo}" style="width:110px;height:110px;border-radius:50%;object-fit:cover;">
-      <div>
-        <h1 style="font-size:38px;margin:0;font-weight:900;">{fullName}</h1>
-        <p style="font-size:20px;color:#06b6d4;margin:5px 0;">{jobTitle}</p>
-        <p style="font-size:14px;color:#555;">{phone} • {email} • {address}</p>
-      </div>
-    </div>
-    <h2 style="font-size:22px;margin:40px 0 10px;border-bottom:3px solid #06b6d4;padding-bottom:8px;">ABOUT ME</h2>
-    <p style="line-height:1.8;">{about}</p>
-    <h2 style="font-size:22px;margin-top:30px;border-bottom:3px solid #06b6d4;padding-bottom:8px;">EDUCATION</h2>
-    <div id="eduHere"></div>
-    <h2 style="font-size:22px;margin-top:30px;border-bottom:3px solid #06b6d4;padding-bottom:8px;">EXPERIENCE</h2>
-    <div id="expHere"></div>
-    <h2 style="font-size:22px;margin-top:30px;border-bottom:3px solid #06b6d4;padding-bottom:8px;">SKILLS & LANGUAGES</h2>
-    <p>{skills}</p>
-  </div>`,
-
-  'grey-modern': `<div style="width:210mm;min-height:297mm;background:#f9fafb;padding:15mm;font-family:Arial,sans-serif;">
-    <div style="background:#1f2937;color:#fff;padding:40px;text-align:center;border-radius:16px 16px 0 0;">
-      <img src="${photo}" style="width:140px;height:140px;border-radius:50%;border:6px solid #fff;margin-bottom:20px;">
-      <h1 style="font-size:48px;font-weight:900;margin:0;">{fullName}</h1>
-      <p style="font-size:22px;margin:10px 0 0;">{jobTitle}</p>
-    </div>
-    <div style="background:#fff;padding:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;">
-      <div>
-        <h2 style="font-size:22px;color:#1f2937;border-left:5px solid #06b6d4;padding-left:12px;">Experience</h2>
-        <div id="expHere" style="margin-top:20px;"></div>
-      </div>
-      <div>
-        <h2 style="font-size:22px;color:#1f2937;border-left:5px solid #06b6d4;padding-left:12px;">Education</h2>
-        <div id="eduHere" style="margin-top:20px;"></div>
-        <h2 style="font-size:22px;color:#1f2937;border-left:5px solid #06b6d4;padding-left:12px;margin-top:30px;">Skills & Languages</h2>
-        <p style="margin-top:15px;">{skills}</p>
-      </div>
-    </div>
-  </div>`,
-
-  'beige-brown': `<div style="width:210mm;min-height:297mm;background:#faf6f1;padding:0;font-family:Arial,sans-serif;">
-    <div style="background:#8b6f47;color:#fff;padding:60px 40px;border-radius:0 0 50px 50px;position:relative;">
-      <h1 style="font-size:58px;font-weight:900;margin:0;">{fullName}</h1>
-      <p style="font-size:26px;margin:10px 0;">{jobTitle}</p>
-      <img src="${photo}" style="width:220px;height:220px;object-fit:cover;border-radius:50%;border:12px solid #fff;position:absolute;top:50%;right:40px;transform:translateY(-50%);">
-    </div>
-    <div style="padding:50px 40px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px;color:#444;">
-      <div><h2 style="font-size:26px;color:#8b6f47;font-weight:700;margin-bottom:20px;">EXPERIENCE</h2><div id="expHere"></div></div>
-      <div><h2 style="font-size:26px;color:#8b6f47;font-weight:700;margin-bottom:20px;">EDUCATION</h2><div id="eduHere"></div></div>
-      <div><h2 style="font-size:26px;color:#8b6f47;font-weight:700;margin-bottom:20px;">SKILLS & ABOUT</h2>
-        <p style="line-height:1.8;">{skills}</p>
-        <p style="margin-top:20px;">{about}</p>
-      </div>
-    </div>
-  </div>`
-};
-
-let step = 1;
-function updateStep(){document.getElementById('cur').textContent=step;}
-function next(){
-  if(step===5) generate();
-  if(step<6){document.getElementById('step'+step).classList.remove('active');step++;document.getElementById('step'+step).classList.add('active');updateStep();}
-  if(step===6) document.querySelector('[onclick="next()"]').textContent='Download PDF';
-}
-function prev(){if(step>1){document.getElementById('step'+step).classList.remove('active');step--;document.getElementById('step'+step).classList.add('active');updateStep();}}
-
-// 技能
-document.getElementById('skillIn').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.value.trim()){
-  const s=document.createElement('span');s.className='tag';
-  s.innerHTML=e.target.value.trim()+' <span class="remove" onclick="this.parentElement.remove()">×</span>';
-  document.getElementById('skillsBox').appendChild(s);e.target.value='';
-}});
-
-// 语言
-function addLang(){
-  const d=document.createElement('div');d.className='flex gap-3 mb-3';
-  d.innerHTML=`<input type="text" placeholder="Language" class="border rounded px-3 py-2 flex-1">
-               <select class="border rounded px-3 py-2"><option>Beginner</option><option>Intermediate</option><option>Advanced</option><option>Fluent</option><option>Native</option></select>
-               <span class="remove" onclick="this.parentElement.remove()">×</span>`;
-  document.getElementById('langBox').appendChild(d);
-}
-
-// 教育、工作经验动态添加
-function addEdu(){addBlock('eduBox','Degree','University','Start','End','Description');}
-function addExp(){addBlock('expBox','Job Title','Company','Start','End','Responsibilities');}
-function addBlock(box,title1,title2,start,end,desc){
-  const div=document.createElement('div');div.className='border rounded-lg p-5 mb-5 relative';
-  div.innerHTML=`<span class="remove absolute top-2 right-2" onclick="this.parentElement.remove()">×</span>
-    <input placeholder="${title1}" class="border rounded w-full mb-3 px-3 py-2">
-    <input placeholder="${title2}" class="border rounded w-full mb-3 px-3 py-2">
-    <div class="grid grid-cols-2 gap-4 mb-3">
-      <input placeholder="${start} (e.g. 2020)" class="border rounded px-3 py-2">
-      <input placeholder="${end} (e.g. 2024 or Present)" class="border rounded px-3 py-2">
-    </div>
-    <textarea placeholder="${desc}" class="border rounded w-full h-28 px-3 py-2"></textarea>`;
-  document.getElementById(box).appendChild(div);
-}
-
-// 生成预览
-function generate(){
-  const data={};
-  document.querySelectorAll('[data-key]').forEach(i=>data[i.dataset.key]=i.value||'');
-  data.fullName=(data.firstName||'')+' '+(data.lastName||'').trim()|| 'YOUR NAME';
-  
-  // 技能
-  data.skills=Array.from(document.querySelectorAll('#skillsBox .tag')).map(t=>t.firstChild.textContent||t.textContent).join(' • ') || '—';
-  
-  let html = templates[tmpl];
-  for(let k in data) html=html.replace(new RegExp('{'+k+'}','g'),data[k]);
-  
-  // 教育 & 经验
-  let edu='',exp='';
-  document.querySelectorAll('#eduBox > div').forEach(b=>{
-    const v=b.querySelectorAll('input,textarea');
-    edu+=`<p><strong>${v[1].value||'University'}</strong> — ${v[0].value||'Degree'}<br>${v[2].value||''} - ${v[3].value||'Present'}<br>${v[4].value||''}</p>`;
-  });
-  document.querySelectorAll('#expBox > div').forEach(b=>{
-    const v=b.querySelectorAll('input,textarea');
-    exp+=`<p><strong>${v[0].value||'Job Title'}</strong> at ${v[1].value||'Company'}<br>${v[2].value||''} - ${v[3].value||'Present'}<br>${v[4].value||''}</p>`;
-  });
-  
-  document.getElementById('preview').innerHTML=html;
-  document.getElementById('eduHere').innerHTML=edu||'<p>No education added</p>';
-  document.getElementById('expHere').innerHTML=exp||'<p>No experience added</p>';
-}
-
-// 下载PDF
-function download(){
-  const opt={
-    margin:0,
-    filename:(document.querySelector('[data-key="firstName"]').value||'My')+'_CV.pdf',
-    image:{type:'jpeg',quality:0.98},
-    html2canvas:{scale:2.5},
-    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
-  };
-  html2pdf().set(opt).from(document.getElementById('preview')).save();
-}
-
-// 初始化
-addLang();addEdu();addExp();
-</script>
+<script src="cv-editor.js"></script>
 </body>
 </html>
