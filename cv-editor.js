@@ -334,32 +334,33 @@ function downloadCVPDF() {
   
   // Create a temporary container for the clone
   const container = document.createElement('div');
-  container.style.position = 'absolute';
-  container.style.left = '-9999px';
+  container.style.position = 'fixed'; // Changed from absolute to fixed to ensure visibility in viewport logic
+  container.style.left = '0';
+  container.style.top = '0';
+  container.style.zIndex = '-9999';
   container.style.width = '210mm'; // Force A4 width
+  container.style.background = 'white'; // Ensure background is white
   container.appendChild(clone);
   document.body.appendChild(container);
   
   const firstName = (document.querySelector('[data-key="firstName"]') && document.querySelector('[data-key="firstName"]').value) || 'My';
   
   const opt = {
-    margin: [0, 0, 0, 0], // No margins, template handles padding
+    margin: 0,
     filename: firstName + '_CV.pdf',
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { 
       scale: 2, 
       useCORS: true, 
       letterRendering: true,
-      logging: false,
-      width: 794, // 210mm in px at 96dpi
-      windowWidth: 794
+      scrollY: 0, // Force scroll to top
+      windowWidth: 1200 // Simulate desktop width
     },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
   // Check if html2pdf is loaded
   if (typeof html2pdf === 'undefined') {
-    // If not loaded, try to load it dynamically or alert
     alert('PDF generator library is missing. Please refresh and try again.');
     document.body.removeChild(container);
     return;
