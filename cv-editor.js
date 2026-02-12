@@ -324,12 +324,54 @@ function generateCV() {
 function downloadCVPDF() {
   const cvContent = document.getElementById('cvContent');
   const templateEl = cvContent && cvContent.querySelector('.cv-template');
-  if (!templateEl || !window.html2pdf) {
+  if (!templateEl) {
     alert('Generate your CV first.');
     return;
   }
+  
+  // Clone the template to modify it for PDF without affecting the preview
+  const clone = templateEl.cloneNode(true);
+  
+  // Create a temporary container for the clone
+  const container = document.createElement('div');
+  container.style.position = 'absolute';
+  container.style.left = '-9999px';
+  container.style.width = '210mm'; // Force A4 width
+  container.appendChild(clone);
+  document.body.appendChild(container);
+  
   const firstName = (document.querySelector('[data-key="firstName"]') && document.querySelector('[data-key="firstName"]').value) || 'My';
-  html2pdf().set({ margin: 10, filename: firstName + '_CV.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).from(templateEl).save();
+  
+  const opt = {
+    margin: [0, 0, 0, 0], // No margins, template handles padding
+    filename: firstName + '_CV.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { 
+      scale: 2, 
+      useCORS: true, 
+      letterRendering: true,
+      logging: false,
+      width: 794, // 210mm in px at 96dpi
+      windowWidth: 794
+    },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  // Check if html2pdf is loaded
+  if (typeof html2pdf === 'undefined') {
+    // If not loaded, try to load it dynamically or alert
+    alert('PDF generator library is missing. Please refresh and try again.');
+    document.body.removeChild(container);
+    return;
+  }
+
+  html2pdf().set(opt).from(clone).save().then(() => {
+    document.body.removeChild(container); // Clean up
+  }).catch(err => {
+    console.error(err);
+    alert('Error generating PDF. Please try again.');
+    document.body.removeChild(container);
+  });
 }
 
 async function generateCoverLetter() {
