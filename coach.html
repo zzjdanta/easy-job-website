@@ -103,6 +103,13 @@
                     <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Online
                 </p>
             </div>
+            
+            <!-- Sound Toggle (Moved here for better visibility) -->
+            <div class="h-8 w-px bg-gray-200 mx-1"></div>
+            <button id="soundToggle" onclick="toggleSound()" class="p-2 text-gray-400 hover:text-cyan-500 hover:bg-cyan-50 rounded-full transition-all" title="Toggle Voice">
+                <svg id="soundIconOn" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                <svg id="soundIconOff" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path></svg>
+            </button>
         </div>
     </div>
 
@@ -264,7 +271,45 @@ async function callAI(text, isSystem = false) {
 }
 
 // Text to Speech
+// Initialize from localStorage or default to true
+let isSoundEnabled = localStorage.getItem('coach_sound_enabled') !== 'false';
+
+// Initialize UI on load
+document.addEventListener('DOMContentLoaded', () => {
+    updateSoundUI();
+});
+
+function updateSoundUI() {
+    const btn = document.getElementById('soundToggle');
+    const onIcon = document.getElementById('soundIconOn');
+    const offIcon = document.getElementById('soundIconOff');
+
+    if (isSoundEnabled) {
+        onIcon.classList.remove('hidden');
+        offIcon.classList.add('hidden');
+        btn.classList.add('text-cyan-500');
+        btn.classList.remove('text-gray-400');
+    } else {
+        onIcon.classList.add('hidden');
+        offIcon.classList.remove('hidden');
+        btn.classList.remove('text-cyan-500');
+        btn.classList.add('text-gray-400');
+    }
+}
+
+function toggleSound() {
+    isSoundEnabled = !isSoundEnabled;
+    localStorage.setItem('coach_sound_enabled', isSoundEnabled);
+    
+    if (!isSoundEnabled) {
+        speechSynthesis.cancel(); // Stop current speech immediately
+    }
+    updateSoundUI();
+}
+
 function speak(text) {
+    if (!isSoundEnabled) return;
+
     // Strip markdown for speech
     const cleanText = text.replace(/[*#_]/g, '');
     const utter = new SpeechSynthesisUtterance(cleanText);
